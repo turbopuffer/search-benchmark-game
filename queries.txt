@@ -900,3 +900,4 @@
 {"query": "+to +be +or +not +to +be", "tags": ["intersection", "intersection:num_tokens_>3"]}
 {"query": "\"to be or not to be\"", "tags": ["phrase", "phrase:num_tokens_>3"]}
 {"query": "to be or not to be", "tags": ["union", "union:num_tokens_>3"]}
+{"query": "a search engine is an information retrieval software system designed to help find information stored on one or more computer systems", "tags": ["union", "union:num_tokens_>3"]}
