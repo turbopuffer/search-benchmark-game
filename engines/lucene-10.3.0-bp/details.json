@@ -5,6 +5,7 @@
   "Doc IDs are encoded as bit sets on dense blocks and FOR-delta otherwise, frequencies and position deltas are encoded using PFOR. Block size is 128.",
   "2 levels of skip data, every 128 and 4,096 docs, inlined in postings.",
   "Impacts are decomposed into pareto-optimal (freq, norm) pairs, stored within skip data.",
-  "Implements block-max MAXSCORE and block-max AND for top-k commands.",
-  "Disjunctions and dense conjunctions reorder/count matching doc IDs using bit sets over windows of 4,096 docs."
+  "Implements vectorized variants of block-max MAXSCORE and block-max AND for top-k commands.",
+  "Disjunctions and dense conjunctions reorder/count matching doc IDs using bit sets over windows of 4,096 docs.",
+  "Doc IDs are reordered using recursive graph bisection."
 ]
