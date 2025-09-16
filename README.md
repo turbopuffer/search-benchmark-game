@@ -58,9 +58,9 @@ environment:
  - AWS c7i.2xlarge instance running on us-east-1
  - Processor Intel(R) Xeon(R) Platinum 8488C
  - Amazon Linux 2023
- - Kernel `6.1.132-147.221.amzn2023.x86_64`
- - Rust 1.85
- - Adoptium JDK `OpenJDK21U-jdk_x64_linux_hotspot_21.0.7_6`
+ - Kernel `6.1.148-173.267.amzn2023.x86_64`
+ - Rust 1.89
+ - Adoptium JDK `Temurin-21.0.8+9`
 
 ## Engine specific detail
 
