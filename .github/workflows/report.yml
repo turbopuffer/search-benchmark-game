@@ -1,0 +1,23 @@
+name: Generate report
+
+on:
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: blacksmith-32vcpu-ubuntu-2404
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - name: Cache corpus
+        id: cache-corpus
+        uses: actions/cache@v4
+        with:
+          path: corpus.json
+          key: corpus
+
+      - name: Download corpus
+        if: steps.cache-corpus.outputs.cache-hit != 'true'
+        run: make corpus
