@@ -54,6 +54,7 @@ publish:
 	@cp -R web/build build/$(NOW)
 	@git fetch origin gh-pages
 	@git checkout gh-pages
-	@git add build/$(NOW)
+	@python3 make_html_index.py
+	@git add build
 	@git commit -m "Publish results for $(NOW)"
 	@git push
