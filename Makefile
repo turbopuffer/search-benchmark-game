@@ -50,9 +50,10 @@ serve:
 publish:
 	@echo "--- Publishing results ---"
 	@cp results.json web/build/results.json
-	@cp -R web/build $(NOW)
+	@mkdir -p build
+	@cp -R web/build build/$(NOW)
 	@git fetch origin gh-pages
 	@git checkout gh-pages
-	@git add $(NOW)
+	@git add build/$(NOW)
 	@git commit -m "Publish results for $(NOW)"
 	@git push
