@@ -3,13 +3,32 @@ name: Generate report
 on:
   workflow_dispatch:
 
+permissions:
+  pages: write
+  id-token: write
+
 jobs:
   report:
+    name: Generate report
+
     runs-on: blacksmith-32vcpu-ubuntu-2404
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Check out code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - name: Set up Java
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@1780873c7b576612439a134613cc4cc74ce5538c
 
       - name: Cache corpus
         id: cache-corpus
@@ -21,3 +40,21 @@ jobs:
       - name: Download corpus
         if: steps.cache-corpus.outputs.cache-hit != 'true'
         run: make corpus
+
+      - name: Build indexes
+        run: make index
+
+      - name: Run benchmarks
+        run: make bench
+
+      - name: Publish results
+        run: make publish
+
+      - name: Upload GitHub Pages artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e

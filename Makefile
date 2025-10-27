@@ -12,6 +12,8 @@ COMMANDS ?=  TOP_100_COUNT TOP_100 COUNT
 ENGINES ?= tantivy-0.25 lucene-10.3.0-bp
 PORT ?= 8080
 
+NOW = $(shell date +%Y-%m-%dT%H-%M-%S)
+
 help:
 	@grep '^[^#[:space:]].*:' Makefile
 
@@ -44,3 +46,13 @@ serve:
 	@echo "--- Serving results ---"
 	@cp results.json web/build/results.json
 	@cd web/build && python3 -m http.server $(PORT)
+
+publish:
+	@echo "--- Publishing results ---"
+	@cp results.json web/build/results.json
+	@cp -R web/build $(NOW)
+	@git fetch origin gh-pages
+	@git checkout gh-pages
+	@git add $(NOW)
+	@git commit -m "Publish results for $(NOW)"
+	@git push
