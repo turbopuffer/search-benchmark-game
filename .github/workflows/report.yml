@@ -49,6 +49,11 @@ jobs:
 
       - name: Publish results
         run: make publish
+        env:
+          GIT_AUTHOR_NAME: turbobot
+          GIT_AUTHOR_EMAIL: bot@turbopuffer.com
+          GIT_COMMITTER_NAME: turbobot
+          GIT_COMMITTER_EMAIL: bot@turbopuffer.com
 
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v3
