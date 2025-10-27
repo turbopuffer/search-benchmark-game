@@ -53,6 +53,7 @@ publish:
 	@mkdir -p build
 	@cp -R web/build build/$(NOW)
 	@git fetch origin gh-pages
+	@git checkout .
 	@git checkout gh-pages
 	@python3 make_html_index.py
 	@git add build
