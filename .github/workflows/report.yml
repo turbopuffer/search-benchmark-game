@@ -41,11 +41,11 @@ jobs:
         if: steps.cache-corpus.outputs.cache-hit != 'true'
         run: make corpus
 
-      - name: Build indexes
-        run: make index
+      # - name: Build indexes
+      #   run: make index
 
-      - name: Run benchmarks
-        run: make bench
+      # - name: Run benchmarks
+      #   run: make bench
 
       - name: Publish results
         run: make publish
