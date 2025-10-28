@@ -4,7 +4,7 @@
 This repository is standardized benchmark for comparing the speed of various
 aspects of search engine technologies.
 
-The results are available [here](https://tantivy-search.github.io/bench/).
+The results are available [here]([https://tantivy-search.github.io/bench/](https://turbopuffer.github.io/search-benchmark-game/)).
 
 This benchmark is both
 - **for users** to make it easy for users to compare different libraries
@@ -90,7 +90,7 @@ The tantivy benchmarks and benchmark driver code requires Cargo. This can be ins
 Clone this repo.
 
 ```
-git clone git@github.com:tantivy-search/search-benchmark-game.git
+git clone git@github.com:turbopuffer/search-benchmark-game.git
 ```
 
 ## Running
