@@ -9,7 +9,7 @@ COMMANDS ?=  TOP_100_COUNT TOP_100 COUNT
 # ENGINES ?= tantivy-0.16 lucene-8.10.1 pisa-0.8.2 bleve-0.8.0-scorch bluge-0.2.2 rucene-0.1
 # ENGINES ?= tantivy-0.16 tantivy-0.17 tantivy-0.18 tantivy-0.19
 # ENGINES ?= tantivy-0.22 tantivy-0.24 tantivy-0.25 lucene-10.3.0 lucene-10.3.0-bp
-ENGINES ?= tantivy-0.25 lucene-10.3.0-bp
+ENGINES ?= tantivy-0.25 lucene-10.3.0
 PORT ?= 8080
 
 NOW = $(shell date +%Y-%m-%dT%H-%M-%S)
