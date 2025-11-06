@@ -1,7 +1,9 @@
 use std::io::BufRead;
 use std::sync::LazyLock;
 use std::mem;
+use std::time::Duration;
 
+use serde::Deserialize;
 use tokio::task::JoinSet;
 
 const API_URL: &str = "http://localhost:3001";
@@ -45,6 +47,8 @@ async fn main() -> Result<(), anyhow::Error> {
         result?;
     }
 
+    wait_for_index().await?;
+
     Ok(())
 }
 
@@ -71,4 +75,36 @@ async fn write_batch(
         .error_for_status()?;
     println!("batch written");
     Ok(())
+}
+
+async fn wait_for_index() -> Result<(), anyhow::Error> {
+    #[derive(Deserialize)]
+    struct MetadataResponse {
+        index: IndexStatus,
+    }
+
+    #[derive(Deserialize)]
+    struct IndexStatus {
+        status: String,
+        unindexed_bytes: Option<usize>,
+    }
+
+    loop {
+        let client = reqwest::Client::new();
+        let response = client
+            .get(format!("{API_URL}/v1/namespaces/{NAMESPACE}/metadata"))
+            .header("Authorization", format!("Bearer {}", API_KEY.as_str()))
+            .send()
+            .await?
+            .error_for_status()?
+            .json::<MetadataResponse>()
+            .await?;
+        if response.index.status == "up-to-date" {
+            println!("index up-to-date");
+            return Ok(());
+        } else {
+            println!("index not up-to-date; unindexed bytes: {}", response.index.unindexed_bytes.unwrap());
+        }
+        tokio::time::sleep(Duration::from_secs(10)).await;
+    }
 }

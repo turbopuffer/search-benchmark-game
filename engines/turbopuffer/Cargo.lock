@@ -1273,6 +1273,7 @@ dependencies = [
  "anyhow",
  "env_logger",
  "reqwest",
+ "serde",
  "serde_json",
  "tokio",
 ]
