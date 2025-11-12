@@ -9,7 +9,7 @@ index:
 	export RUST_LOG=info && target/release/build_index < ${CORPUS}
 
 serve: target/release/do_query
-	@target/release/do_query idx
+	@target/release/do_query
 
 target/release/%: src/bin/%.rs
 	@echo "\n\n\n--- Building turbopuffer's binary ---"

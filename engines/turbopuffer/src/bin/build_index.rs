@@ -1,6 +1,6 @@
 use std::io::BufRead;
-use std::sync::LazyLock;
 use std::mem;
+use std::sync::LazyLock;
 use std::time::Duration;
 
 use serde::Deserialize;
@@ -52,9 +52,7 @@ async fn main() -> Result<(), anyhow::Error> {
     Ok(())
 }
 
-async fn write_batch(
-    batch: Vec<serde_json::Value>,
-) -> Result<(), anyhow::Error> {
+async fn write_batch(batch: Vec<serde_json::Value>) -> Result<(), anyhow::Error> {
     let client = reqwest::Client::new();
     client
         .post(format!("{API_URL}/v2/namespaces/{NAMESPACE}"))
@@ -65,7 +63,11 @@ async fn write_batch(
                 "id": "string",
                 "text": {
                     "type": "string",
-                    "full_text_search": true,
+                    "full_text_search": {
+                        "remove_stop_words": false,
+                        "k1": 0.9,
+                        "b": 0.4,
+                    }
                 }
             },
             "disable_backpressure": true,
@@ -103,7 +105,10 @@ async fn wait_for_index() -> Result<(), anyhow::Error> {
             println!("index up-to-date");
             return Ok(());
         } else {
-            println!("index not up-to-date; unindexed bytes: {}", response.index.unindexed_bytes.unwrap());
+            println!(
+                "index not up-to-date; unindexed bytes: {}",
+                response.index.unindexed_bytes.unwrap()
+            );
         }
         tokio::time::sleep(Duration::from_secs(10)).await;
     }

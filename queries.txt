@@ -13,3 +13,4 @@
 {"query": "france president world war resistance london appeal", "tags": ["union", "union:num_tokens_5_10"]}
 {"query": "pop singer songwriter born 1989 won best country song time person of year", "tags": ["union", "union:num_tokens_10_15"]}
 {"query": "kenyan world marathon record olympic champion bbc world sport star of the year", "tags": ["union", "union:num_tokens_10_15"]}
+{"query": "a search engine is an information retrieval software system designed to help find information stored on one or more computer systems", "tags": ["union", "union:num_tokens_20_30"]}
