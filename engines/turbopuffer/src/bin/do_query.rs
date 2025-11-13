@@ -41,6 +41,7 @@ async fn main() -> Result<(), anyhow::Error> {
             .json(&serde_json::json!({
                 "rank_by": [ "text", "BM25", query ],
                 "top_k": top_k,
+                "consistency": {"level": "eventual"},
             }))
             .send()
             .await?
