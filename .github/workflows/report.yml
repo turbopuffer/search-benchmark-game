@@ -30,7 +30,7 @@ jobs:
         with:
           repository: turbopuffer/turbopuffer
           path: turbopuffer
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Set up Java
         uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165
