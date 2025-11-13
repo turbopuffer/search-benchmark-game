@@ -8,6 +8,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_API_KEY }}
+
 jobs:
   report:
     name: Generate report
