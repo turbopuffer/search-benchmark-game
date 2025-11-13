@@ -25,6 +25,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
+      - name: Check out tpuf repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          repository: turbopuffer/turbopuffer
+          path: turbopuffer
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up Java
         uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165
         with:
@@ -33,6 +40,13 @@ jobs:
 
       - name: Set up Rust
         uses: actions-rust-lang/setup-rust-toolchain@1780873c7b576612439a134613cc4cc74ce5538c
+
+      - name: Launch turbopuffer
+        run: |
+          cd turbopuffer
+          cargo build --release --bin tpuf server
+          cargo run --release --bin tpuf server &
+          sleep 1
 
       - name: Cache corpus
         id: cache-corpus
