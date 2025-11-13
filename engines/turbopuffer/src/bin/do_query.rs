@@ -1,6 +1,8 @@
 use std::io::BufRead;
 use std::sync::LazyLock;
 
+use serde::Deserialize;
+
 const API_URL: &str = "http://localhost:3001";
 const API_KEY: LazyLock<String> = LazyLock::new(|| {
     std::env::var("TURBOPUFFER_API_KEY").expect("TURBOPUFFER_API_KEY must be set")
@@ -34,7 +36,7 @@ async fn main() -> Result<(), anyhow::Error> {
                 continue;
             }
         };
-        client
+        let response = client
             .post(&query_url)
             .header("Authorization", &authorization_header)
             .header("Content-Type", "application/json")
@@ -45,9 +47,28 @@ async fn main() -> Result<(), anyhow::Error> {
             }))
             .send()
             .await?
-            .error_for_status()?;
-        // TODO: chech that there is at least one hit
-        println!("1");
+            .error_for_status()?
+            .json::<QueryResponse>()
+            .await?;
+
+        // Ensure the entire data set is indexed.
+        assert_eq!(response.performance.exhaustive_search_count, 0);
+
+        println!("{}", response.rows.len());
     }
     Ok(())
+}
+
+#[derive(Deserialize)]
+struct QueryResponse {
+    rows: Vec<Row>,
+    performance: QueryPerformance,
+}
+
+#[derive(Deserialize)]
+struct Row {}
+
+#[derive(Deserialize)]
+struct QueryPerformance {
+    exhaustive_search_count: u64,
 }
