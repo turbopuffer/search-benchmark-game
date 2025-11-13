@@ -10,7 +10,6 @@ permissions:
 
 env:
   TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_API_KEY }}
-  RUSTFLAGS: "--cfg tokio_unstable"
 
 jobs:
   report:
@@ -48,6 +47,9 @@ jobs:
           sudo apt-get install -y libopenblas-dev
           cd turbopuffer
           source devbox/env.sh
+          # TODO: use a machine that supports the CPU features we use in
+          # production.
+          export RUSTFLAGS="-C target-cpu=native --cfg tokio_unstable"
           cargo build --release --bin tpuf
           cargo run --release --bin tpuf server &
           sleep 1
