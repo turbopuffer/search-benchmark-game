@@ -44,7 +44,7 @@ jobs:
       - name: Launch turbopuffer
         run: |
           cd turbopuffer
-          cargo build --release --bin tpuf server
+          cargo build --release --bin tpuf
           cargo run --release --bin tpuf server &
           sleep 1
 
