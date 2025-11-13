@@ -64,7 +64,7 @@ async fn write_batch(batch: Vec<serde_json::Value>) -> Result<(), anyhow::Error>
                 "text": {
                     "type": "string",
                     "full_text_search": {
-                        "remove_stop_words": false,
+                        "remove_stopwords": false,
                         "k1": 0.9,
                         "b": 0.4,
                     }
