@@ -10,6 +10,7 @@ permissions:
 
 env:
   TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_API_KEY }}
+  RUSTFLAGS: "--cfg tokio_unstable"
 
 jobs:
   report:
