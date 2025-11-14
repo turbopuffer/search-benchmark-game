@@ -43,15 +43,29 @@ jobs:
 
       - name: Launch turbopuffer
         run: |
+          # Install OpenBLAS.
           sudo apt-get update
           sudo apt-get install -y libopenblas-dev
+
+          # Make fake cache directory.
+          sudo mkdir -p /mnt/disks/localssd/tpuf-staging-cache
+          sudo chown $USER /mnt/disks/localssd/tpuf-staging-cache
+
+          # Set up devbox-like environment.
           cd turbopuffer
           source devbox/env.sh
           # TODO: use a machine that supports the CPU features we use in
           # production.
           export RUSTFLAGS="-C target-cpu=native --cfg tokio_unstable"
+          # Temporary override to enable all block-based settings.
+          sed -i 's/^\(enable_block_based_[^=]* = \).*/\1true/' settings/default.toml
+
+          # Build and run tpuf.
           cargo build --release --bin tpuf
           cargo run --release --bin tpuf server &
+
+          # Wait for tpuf to become available.
+          # TODO: do this more robustly.
           sleep 1
 
       - name: Cache corpus
@@ -70,6 +84,13 @@ jobs:
 
       - name: Build indexes
         run: make index
+
+      - name: Trigger full compaction
+        run: |
+          # Only works with the test API key where the API key *is* the org ID.
+          cargo run --release --bin tpuf -- prompt-full-compaction $TURBOPUFFER_API_KEY search-benchmark-game
+          # reindex <org_id> <namespace> <from_scratch> <force>
+          cargo run --release --bin tpuf -- reindex $TURBOPUFFER_API_KEY search-benchmark-game false true
 
       - name: Run benchmarks
         run: make bench
