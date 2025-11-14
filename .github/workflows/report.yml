@@ -90,9 +90,9 @@ jobs:
         run: |
           cd turbopuffer
           # Only works with the test API key where the API key *is* the org ID.
-          cargo run --release --bin tpuf -- prompt-full-compaction $TURBOPUFFER_API_KEY search-benchmark-game
+          target/release/tpuf prompt-full-compaction $TURBOPUFFER_API_KEY search-benchmark-game
           # reindex <org_id> <namespace> <from_scratch> <force>
-          cargo run --release --bin tpuf -- reindex $TURBOPUFFER_API_KEY search-benchmark-game false true
+          target/release/tpuf reindex $TURBOPUFFER_API_KEY search-benchmark-game false true
 
       - name: Run benchmarks
         run: make bench
