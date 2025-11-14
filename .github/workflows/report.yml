@@ -62,7 +62,7 @@ jobs:
 
           # Build and run tpuf.
           cargo build --release --bin tpuf
-          cargo run --release --bin tpuf server &
+          cargo run --release --bin tpuf server &> tpuf.log &
 
           # Wait for tpuf to become available.
           # TODO: do this more robustly.
@@ -102,6 +102,12 @@ jobs:
           GIT_AUTHOR_EMAIL: bot@turbopuffer.com
           GIT_COMMITTER_NAME: turbobot
           GIT_COMMITTER_EMAIL: bot@turbopuffer.com
+
+      - name: Upload turbopuffer logs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          path: tpuf.log
 
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@v3
