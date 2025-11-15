@@ -2,6 +2,8 @@ name: Generate report
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * *" # daily at 10am UTC, before most of us start work
 
 permissions:
   contents: write
