@@ -59,6 +59,8 @@ jobs:
           export RUSTFLAGS="-C target-cpu=native --cfg tokio_unstable"
           # Temporary override to enable all block-based settings.
           sed -i 's/^\(enable_block_based_[^=]* = \).*/\1true/' settings/default.toml
+          sed -i 's/^\(generation_for_new_indexes = \).*/\1"block_based_posting"/' settings/default.toml
+          sed -i 's/^\(default_tokenizer = \).*/\1"word_v3"/' settings/default.toml
 
           # Build and run tpuf.
           cargo build --release --bin tpuf
