@@ -3,7 +3,7 @@ export
 
 WIKI_SRC = "https://www.dropbox.com/s/wwnfnu441w1ec9p/wiki-articles.json.bz2"
 
-COMMANDS ?=  TOP_10 TOP_100 TOP_1000
+COMMANDS ?=  TOP_10 TOP_100 TOP_1000 TOP_100_FILTER_5% TOP_100_FILTER_20% TOP_1000_FILTER_80%
 
 # ENGINES ?= tantivy-0.13 lucene-8.4.0 pisa-0.8.2 rucene-0.1 bleve-0.8.0-scorch rucene-0.1 tantivy-0.11 tantivy-0.14 tantivy-0.15 tantivy-0.16 tantivy-0.17 tantivy-0.18 tantivy-0.19
 # ENGINES ?= tantivy-0.16 lucene-8.10.1 pisa-0.8.2 bleve-0.8.0-scorch bluge-0.2.2 rucene-0.1

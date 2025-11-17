@@ -26,25 +26,43 @@ async fn main() -> Result<(), anyhow::Error> {
         );
         let command = fields[0];
         let query = fields[1];
-        let top_k = match command {
-            "TOP_10" => 10,
-            "TOP_100" => 100,
-            "TOP_1000" => 1000,
-            "TOP_10000" => 10000,
+        let (top_k, filter) = match command {
+            "TOP_10" => (10, None),
+            "TOP_100" => (100, None),
+            "TOP_1000" => (1000, None),
+            "TOP_10000" => (10000, None),
+            "TOP_10_FILTER_80%" => (10, Some("80%")),
+            "TOP_10_FILTER_20%" => (10, Some("20%")),
+            "TOP_10_FILTER_5%" => (10, Some("5%")),
+            "TOP_100_FILTER_80%" => (100, Some("80%")),
+            "TOP_100_FILTER_20%" => (100, Some("20%")),
+            "TOP_100_FILTER_5%" => (100, Some("5%")),
+            "TOP_1000_FILTER_80%" => (1000, Some("80%")),
+            "TOP_1000_FILTER_20%" => (1000, Some("20%")),
+            "TOP_1000_FILTER_5%" => (1000, Some("5%")),
             _ => {
                 println!("Unsupported command: {}", command);
                 continue;
             }
         };
+        let body = match filter {
+            Some(filter) => serde_json::json!({
+                "rank_by": [ "text", "BM25", query ],
+                "filters": [ "filter", "Contains", filter],
+                "top_k": top_k,
+                "consistency": {"level": "eventual"},
+            }),
+            None => serde_json::json!({
+                "rank_by": [ "text", "BM25", query ],
+                "top_k": top_k,
+                "consistency": {"level": "eventual"},
+            }),
+        };
         let response = client
             .post(&query_url)
             .header("Authorization", &authorization_header)
             .header("Content-Type", "application/json")
-            .json(&serde_json::json!({
-                "rank_by": [ "text", "BM25", query ],
-                "top_k": top_k,
-                "consistency": {"level": "eventual"},
-            }))
+            .json(&body)
             .send()
             .await?
             .error_for_status()?

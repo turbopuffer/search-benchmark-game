@@ -15,6 +15,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -24,7 +25,9 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.ThreadInterruptedException;
 
 import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 public class BuildIndex {
 
@@ -45,13 +48,8 @@ public class BuildIndex {
 			final Thread[] threads = new Thread[Runtime.getRuntime().availableProcessors()];
 			final AtomicInteger indexed = new AtomicInteger();
 			for (int i = 0; i < threads.length; ++i) {
-
-				final Document document = new Document();
 				StoredField idField = new StoredField("id", "");
 				TextField textField = new TextField("text", "", Field.Store.NO);
-
-				document.add(idField);
-				document.add(textField);
 
 				threads[i] = new Thread(() -> {
 					while (true) {
@@ -76,8 +74,18 @@ public class BuildIndex {
 						final JsonObject parsed_doc = Json.parse(line).asObject();
 						final String id = parsed_doc.get("id").asString();
 						final String text = parsed_doc.get("text").asString();
+						final JsonValue filter = parsed_doc.get("filter");
+						final Document document = new Document();
 						idField.setStringValue(id);
 						textField.setStringValue(text);
+						document.add(idField);
+						document.add(textField);
+						if (filter != null) {
+							JsonArray filterArray = filter.asArray();
+							for (int j = 0; j < filterArray.size(); ++j) {
+								document.add(new StringField("filter", filterArray.get(j).asString(), Field.Store.NO));
+							}
+						}
 						try {
 							writer.addDocument(document);
 							final int numIndexed = indexed.getAndIncrement();
