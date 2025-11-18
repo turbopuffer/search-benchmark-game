@@ -125,7 +125,13 @@ jobs:
             http://localhost:3001/v2/namespaces/search-benchmark-game
 
           # reindex <org_id> <namespace> <from_scratch> <force>
-          target/release/tpuf reindex $TURBOPUFFER_API_KEY search-benchmark-game false true
+          target/release/tpuf reindex $TURBOPUFFER_API_KEY search-benchmark-game false true || true
+
+          # The above reindex is expected to fail due to a 30s timeout. Sigh.
+          while [[ $(grep --count "done incremental indexing" tpuf.log) -lt 2 ]]; do
+            echo "waiting for compaction job from reindex to complete..."
+            sleep 10
+          done
 
       - name: Run benchmarks
         run: make bench
