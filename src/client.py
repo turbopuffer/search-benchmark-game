@@ -75,8 +75,7 @@ def printProgressBar (progress, prefix = '', suffix = '', decimals = 1, length =
     if progress >= 1:
         print()
 
-# TODO: Bring it back to 60s once done iterating on the benchmark
-WARMUP_TIME = 10 # 60 seconds
+WARMUP_TIME = 60 # 60 seconds
 NUM_ITER = 10
 
 if __name__ == "__main__":
