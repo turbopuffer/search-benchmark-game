@@ -119,7 +119,7 @@ jobs:
           # Namespace needs at least one pending write to hit the compaction
           # code path.
           curl \
-            -H "Authorization: Bearer $TURBOPUFFER_TEST_API_KEY" \
+            -H "Authorization: Bearer $TURBOPUFFER_API_KEY" \
             -H "Content-Type: application/json" \
             --data '{"deletes": ["nonexistent but forces a write"]}' \
             http://localhost:3001/v2/namespaces/search-benchmark-game
