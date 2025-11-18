@@ -100,6 +100,19 @@ jobs:
         run: |
           cd turbopuffer
           source devbox/env.sh
+
+          # The `make index` step waits for the /metadata endpoint to stop
+          # reporting unindexed bytes, but this occurs BEFORE the compaction
+          # step of the index job is actually completed. We poll the logs to
+          # wait for the actual index job to complete.
+          # TODO: find a better way to do this?
+          while ! grep -q "done incremental indexing" tpuf.log; do
+            echo "waiting for compaction job from initial index to complete..."
+            sleep 10
+          done
+
+          # Trigger a full recompaction.
+
           # Only works with the test API key where the API key *is* the org ID.
           target/release/tpuf prompt-full-compaction $TURBOPUFFER_API_KEY search-benchmark-game
           # reindex <org_id> <namespace> <from_scratch> <force>
