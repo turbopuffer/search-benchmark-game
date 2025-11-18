@@ -63,6 +63,8 @@ jobs:
           # TODO: use a machine that supports the CPU features we use in
           # production.
           export RUSTFLAGS="-C target-cpu=native --cfg tokio_unstable"
+          # Ensure we wait for reindex after full compaction to complete.
+          sed -i 's/^\(wait_for_indexing_to_finish = \).*/\1true/' settings/default.toml
           # Temporary override to enable all block-based settings.
           sed -i 's/^\(enable_block_based_[^=]* = \).*/\1true/' settings/default.toml
           sed -i 's/^\(generation_for_new_indexes = \).*/\1"block_based_posting"/' settings/default.toml
