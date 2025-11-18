@@ -115,6 +115,15 @@ jobs:
 
           # Only works with the test API key where the API key *is* the org ID.
           target/release/tpuf prompt-full-compaction $TURBOPUFFER_API_KEY search-benchmark-game
+
+          # Namespace needs at least one pending write to hit the compaction
+          # code path.
+          curl \
+            -H "Authorization: Bearer $TURBOPUFFER_TEST_API_KEY" \
+            -H "Content-Type: application/json" \
+            --data '{"deletes": ["nonexistent but forces a write"]}' \
+            http://localhost:3001/v2/namespaces/search-benchmark-game
+
           # reindex <org_id> <namespace> <from_scratch> <force>
           target/release/tpuf reindex $TURBOPUFFER_API_KEY search-benchmark-game false true
 
