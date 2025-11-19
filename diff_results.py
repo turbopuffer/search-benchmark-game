@@ -43,13 +43,6 @@ def print_diff_engine(baseline, contender):
     p_value = stats.ttest_ind(baseline_durations, contender_durations, equal_var=True)[1]
     print(f"{query_str:>32} {baseline_mean:16.2f} {baseline_stddev:16.2f} {contender_mean:16.2f} {contender_stddev:16.2f} {GREEN if change <= 0 else RED}{change:16.2f}%{COLOR_END} {p_value:16.2f}")
 
-    #print("%s % 5.2f % 5.2f % 5.2f % 5.2f % 5.2f\n" %('{0: >32}'.format(query_str),
-    #    np.mean(baseline_durations),
-    #    np.std(baseline_durations, ddof=1),
-    #    np.mean(contender_durations),
-    #    np.std(contender_durations, ddof=1),
-    #    stats.ttest_ind(baseline_durations, contender_durations, equal_var=True)[1]))
-
 
 if __name__ == '__main__':
   import json, sys
