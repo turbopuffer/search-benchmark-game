@@ -7,10 +7,13 @@
 {"query": "new york population", "tags": ["union", "union:num_tokens_3"]}
 {"query": "world bank president", "tags": ["union", "union:num_tokens_3"]}
 {"query": "united states constitution", "tags": ["union", "union:num_tokens_3"]}
+{"query": "law school rankings", "tags": ["union", "union:num_tokens_3"]}
 {"query": "lord of the rings", "tags": ["union", "union:num_tokens_4"]}
 {"query": "story of a girl", "tags": ["union", "union:num_tokens_4"]}
+{"query": "to be or not to be", "tags": ["union", "union:num_tokens_4"]}
 {"query": "arsenal player 1998 forward goal non flying dutch", "tags": ["union", "union:num_tokens_5_10"]}
 {"query": "france president world war resistance london appeal", "tags": ["union", "union:num_tokens_5_10"]}
 {"query": "pop singer songwriter born 1989 won best country song time person of year", "tags": ["union", "union:num_tokens_10_15"]}
 {"query": "kenyan world marathon record olympic champion bbc world sport star of the year", "tags": ["union", "union:num_tokens_10_15"]}
 {"query": "a search engine is an information retrieval software system designed to help find information stored on one or more computer systems", "tags": ["union", "union:num_tokens_20_30"]}
+{"query": "a database index is a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and storage space to maintain the index data structure indexes are used to quickly locate data without having to search every row in a database table every time said table is accessed", "tags": ["union", "union:num_tokens_40_50"]}
