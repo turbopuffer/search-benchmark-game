@@ -68,6 +68,9 @@ async fn write_batch(batch: Vec<serde_json::Value>) -> Result<(), anyhow::Error>
                         "k1": 0.9,
                         "b": 0.4,
                     }
+                },
+                "filter": {
+                    "type": "[]string",
                 }
             },
             "disable_backpressure": true,

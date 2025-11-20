@@ -2,9 +2,10 @@
 extern crate tantivy;
 
 use tantivy::collector::{Collector, Count, SegmentCollector, TopDocs};
-use tantivy::query::{QueryParser, Weight};
+use tantivy::query::{BooleanQuery, ConstScoreQuery, Occur, Query, QueryParser, TermQuery, Weight};
+use tantivy::schema::IndexRecordOption;
 use tantivy::tokenizer::TokenizerManager;
-use tantivy::{DocId, Index, Score, SegmentReader, TERMINATED};
+use tantivy::{DocId, Index, Score, SegmentReader, Term, TERMINATED};
 
 use std::collections::BinaryHeap;
 use std::env;
@@ -158,7 +159,42 @@ fn main_inner(index_dir: &Path) -> tantivy::Result<()> {
             "Expected a line in the format <COMMAND> query."
         );
         let command = fields[0];
-        let query = query_parser.parse_query(fields[1])?;
+        let (command, filter) = match command {
+            "TOP_10_FILTER_80%" => ("TOP_10", Some("80%")),
+            "TOP_10_FILTER_20%" => ("TOP_10", Some("20%")),
+            "TOP_10_FILTER_5%" => ("TOP_10", Some("5%")),
+            "TOP_100_FILTER_80%" => ("TOP_100", Some("80%")),
+            "TOP_100_FILTER_20%" => ("TOP_100", Some("20%")),
+            "TOP_100_FILTER_5%" => ("TOP_100", Some("5%")),
+            "TOP_1000_FILTER_80%" => ("TOP_1000", Some("80%")),
+            "TOP_1000_FILTER_20%" => ("TOP_1000", Some("20%")),
+            "TOP_1000_FILTER_5%" => ("TOP_1000", Some("5%")),
+            _ => (command, None),
+        };
+        let query: Box<dyn Query> = query_parser.parse_query(fields[1])?;
+        // TODO: is there a better way to apply filters in Tantivy?
+        let query = match filter {
+            Some(filter) => {
+                let filter_field = index
+                    .schema()
+                    .get_field("filter")
+                    .expect("no filter field?!");
+                Box::new(BooleanQuery::new(vec![
+                    (Occur::Must, query.box_clone()),
+                    (
+                        Occur::Must,
+                        Box::new(ConstScoreQuery::new(
+                            Box::new(TermQuery::new(
+                                Term::from_field_text(filter_field, filter),
+                                IndexRecordOption::Basic,
+                            )),
+                            0f32,
+                        )),
+                    ),
+                ]))
+            }
+            None => query,
+        };
         let count;
         match command {
             "COUNT" => {
