@@ -84,7 +84,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: corpus.json
-          key: corpus
+          key: corpus-with-filters
 
       - name: Download corpus
         if: steps.cache-corpus.outputs.cache-hit != 'true'
