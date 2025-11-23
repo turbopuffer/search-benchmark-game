@@ -37,6 +37,7 @@ jobs:
           repository: turbopuffer/turbopuffer
           path: turbopuffer
           token: ${{ secrets.GH_TOKEN }}
+          ref: bbe8eca6508161efcb3ee9a04966e2104c130c12
 
       - name: Set up Java
         uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165
