@@ -19,6 +19,10 @@ from collections import defaultdict
 ANNOTATIONS = {
     '2025-11-22T11-01-12': { 'text': 'Made block postings generic over weight', 'pr': 5995 },
     '2025-11-23T11-42-28': { 'text': 'Inlined decoding of weights', 'pr': 6043 },
+    '2025-12-10T17-10-43': { 'text': 'Added support for conditional boosts', 'pr': 6061 },
+    '2025-12-11T10-52-02': { 'text': 'Added support for inner sum/max', 'pr': 6222 },
+    '2025-12-17T10-51-57': { 'text': 'Switch to ENV=development + BBP: don\'t use BitPacker8x', 'pr': 5952 },
+    '2025-12-19T10-50-45': 'Switch to ENV=benchmark',
 }
 
 
