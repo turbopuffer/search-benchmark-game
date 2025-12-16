@@ -73,7 +73,8 @@ jobs:
 
           # Build and run tpuf.
           cargo build --release --bin tpuf
-          cargo run --release --bin tpuf server &> tpuf.log &
+          # Use ENV=development instead of the default, which is "test".
+          ENV=development cargo run --release --bin tpuf server &> tpuf.log &
 
           # Wait for tpuf to become available.
           # TODO: do this more robustly.
