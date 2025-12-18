@@ -71,7 +71,7 @@ jobs:
           # Build and run tpuf.
           cargo build --release --bin tpuf
           # Use ENV=benchmark instead of the default, which is "test".
-          ENV=benchmark cargo run --release --bin tpuf server &> tpuf.log &
+          ENV=benchmark HOSTNAME=`hostname` cargo run --release --bin tpuf server &> tpuf.log &
 
           # Wait for tpuf to become available.
           # TODO: do this more robustly.
