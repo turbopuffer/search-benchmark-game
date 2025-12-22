@@ -16,7 +16,7 @@ def print_diff(baseline, contender):
     else:
       print("")
     print(f"\033[1m{collection_type}\033[0m")
-    print("                                            Query \ Latency (μs)     Baseline avg  Baseline stddev    Contender avg Contender stddev            Change          p-value")    
+    print("                                            Query \\ Latency (μs)     Baseline avg  Baseline stddev    Contender avg Contender stddev            Change          p-value")    
     print_diff_engine(baseline[collection_type][TPUF], contender[collection_type][TPUF])
 
 def print_diff_engine(baseline, contender):
