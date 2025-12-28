@@ -19,6 +19,8 @@ const MAX_CONCURRENCY: usize = 32;
 async fn main() -> Result<(), anyhow::Error> {
     env_logger::init();
 
+    delete_namespace().await?;
+
     let mut join_set = JoinSet::new();
     let mut i = 0;
     let mut batch = vec![];
@@ -49,6 +51,18 @@ async fn main() -> Result<(), anyhow::Error> {
 
     wait_for_index().await?;
 
+    Ok(())
+}
+
+async fn delete_namespace() -> Result<(), anyhow::Error> {
+    let client = reqwest::Client::new();
+    client
+        .delete(format!("{API_URL}/v1/namespaces/{NAMESPACE}"))
+        .header("Authorization", format!("Bearer {}", API_KEY.as_str()))
+        .send()
+        .await?
+        .error_for_status()?;
+    println!("namespace deleted");
     Ok(())
 }
 
