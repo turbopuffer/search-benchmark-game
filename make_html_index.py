@@ -23,6 +23,7 @@ ANNOTATIONS = {
     '2025-12-11T10-52-02': { 'text': 'Added support for inner sum/max', 'pr': 6222 },
     '2025-12-17T10-51-57': { 'text': 'Switch to ENV=development + BBP: don\'t use BitPacker8x', 'pr': 5952 },
     '2025-12-19T10-50-45': 'Switch to ENV=benchmark',
+    '2025-12-28T18-52-58': 'Delete namespace prior to pushing data',
 }
 
 
