@@ -19,7 +19,11 @@ const MAX_CONCURRENCY: usize = 32;
 async fn main() -> Result<(), anyhow::Error> {
     env_logger::init();
 
-    delete_namespace().await?;
+    if let Ok(_) = delete_namespace().await {
+        println!("namespace {NAMESPACE} deleted");
+    } else {
+        println!("namespace {NAMESPACE} not found, ignoring");
+    }
 
     let mut join_set = JoinSet::new();
     let mut i = 0;
