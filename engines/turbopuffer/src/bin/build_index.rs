@@ -66,7 +66,6 @@ async fn delete_namespace() -> Result<(), anyhow::Error> {
         .send()
         .await?
         .error_for_status()?;
-    println!("namespace deleted");
     Ok(())
 }
 
