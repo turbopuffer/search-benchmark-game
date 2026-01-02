@@ -7,6 +7,7 @@ with latency over time plots for each query.
 
 import json
 import os
+import statistics
 from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
@@ -35,10 +36,10 @@ def parse_date_from_dirname(dirname):
         return None
 
 
-def extract_min_latency(results_data, result_type='TOP_10'):
+def extract_avg_latency(results_data, result_type='TOP_10'):
     """
-    Extract minimum latency for each query from results.json structure.
-    Returns a dict mapping query -> min_latency.
+    Extract average latency and standard deviation for each query from results.json structure.
+    Returns a dict mapping query -> (avg_latency, stddev).
     """
     query_latencies = {}
     
@@ -47,14 +48,15 @@ def extract_min_latency(results_data, result_type='TOP_10'):
     result_data = results.get(result_type, {})
     turbopuffer_data = result_data.get('turbopuffer', [])
     
-    # For each query result, extract query and minimum duration
+    # For each query result, extract query and calculate average and stddev
     for query_result in turbopuffer_data:
         query = query_result.get('query')
         durations = query_result.get('duration', [])
         
         if query and durations:
-            min_latency = min(durations)
-            query_latencies[query] = min_latency
+            avg_latency = statistics.mean(durations)
+            stddev = statistics.stdev(durations) if len(durations) > 1 else 0.0
+            query_latencies[query] = (avg_latency, stddev)
     
     return query_latencies
 
@@ -229,11 +231,11 @@ def collect_data_from_build_dir(build_dir='build', annotations=None, result_type
             
             # Extract query latencies for each result type
             for result_type in result_types:
-                query_latencies = extract_min_latency(results_data, result_type)
+                query_latencies = extract_avg_latency(results_data, result_type)
                 
                 # Add to our collection
-                for query, latency in query_latencies.items():
-                    all_query_data[result_type][query].append((date, latency))
+                for query, (avg_latency, stddev) in query_latencies.items():
+                    all_query_data[result_type][query].append((date, avg_latency, stddev))
         
         except Exception as e:
             print(f"Warning: Error processing {results_file}: {e}")
@@ -275,10 +277,12 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
         query_data = all_query_data[result_type]
         for query, data_points in query_data.items():
             dates = [dp[0].isoformat() for dp in data_points]
-            latencies = [dp[1] for dp in data_points]
+            latencies = [dp[1] for dp in data_points]  # avg_latency
+            stddevs = [dp[2] if len(dp) > 2 else 0.0 for dp in data_points]  # stddev
             chart_data[query] = {
                 'dates': dates,
-                'latencies': latencies
+                'latencies': latencies,
+                'stddevs': stddevs
             }
         all_chart_data[result_type] = chart_data
     
@@ -488,11 +492,25 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                 const instance = chartInstances[chartId];
                 if (!instance) return;
                 
-                const query = instance.config.data.datasets[0]._query;
+                // Find the main latency dataset (dataset[1])
+                const mainDataset = instance.data.datasets.find(ds => ds._query);
+                if (!mainDataset) return;
+                
+                const query = mainDataset._query;
                 if (chartData[query]) {{
                     const data = chartData[query];
                     instance.data.labels = data.dates;
-                    instance.data.datasets[0].data = data.latencies;
+                    
+                    // Update stddev bounds (upper and lower)
+                    const upperBounds = data.latencies.map((lat, idx) => lat + (data.stddevs[idx] || 0));
+                    const lowerBounds = data.latencies.map((lat, idx) => Math.max(0, lat - (data.stddevs[idx] || 0)));
+                    
+                    // Update datasets: [0] = upper bounds, [1] = main latency, [2] = lower bounds
+                    if (instance.data.datasets.length >= 3) {{
+                        instance.data.datasets[0].data = upperBounds;
+                        instance.data.datasets[1].data = data.latencies;
+                        instance.data.datasets[2].data = lowerBounds;
+                    }}
                     
                     // Update annotations based on new dates
                     const newAnnotations = [];
@@ -570,6 +588,7 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
         data = chart_data[query]
         dates_json = json.dumps(data['dates'])
         latencies_json = json.dumps(data['latencies'])
+        stddevs_json = json.dumps(data.get('stddevs', [0.0] * len(data['latencies'])))
         
         # Find annotations that match dates in this chart
         chart_annotations = []
@@ -586,9 +605,11 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
         
         # Calculate statistics
         latencies = data['latencies']
+        stddevs = data.get('stddevs', [0.0] * len(latencies))
         min_latency = min(latencies) if latencies else 0
         max_latency = max(latencies) if latencies else 0
         avg_latency = sum(latencies) / len(latencies) if latencies else 0
+        avg_stddev = sum(stddevs) / len(stddevs) if stddevs else 0
         
         chart_id = f"chart_{hash(query) % 1000000}"
         
@@ -600,16 +621,20 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
             </div>
             <div class="stats">
                 <div class="stat-item">
+                    <span class="stat-label">Avg:</span>
+                    <span>{avg_latency:.2f} ms</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Std Dev:</span>
+                    <span>{avg_stddev:.2f} ms</span>
+                </div>
+                <div class="stat-item">
                     <span class="stat-label">Min:</span>
                     <span>{min_latency:.2f} ms</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-label">Max:</span>
                     <span>{max_latency:.2f} ms</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Avg:</span>
-                    <span>{avg_latency:.2f} ms</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-label">Data Points:</span>
@@ -623,7 +648,12 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                 const ctx = document.getElementById('{chart_id}').getContext('2d');
                 const dates = {dates_json};
                 const latencies = {latencies_json};
+                const stddevs = {stddevs_json};
                 const annotations = {annotations_json};
+                
+                // Prepare data for stddev blur effect (upper and lower bounds)
+                const upperBounds = latencies.map((lat, idx) => lat + stddevs[idx]);
+                const lowerBounds = latencies.map((lat, idx) => Math.max(0, lat - stddevs[idx]));
                 
                 // Build annotation configuration
                 const annotationConfig = {{
@@ -689,16 +719,44 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                     type: 'line',
                     data: {{
                         labels: dates,
-                        datasets: [{{
-                            label: 'Latency (ms)',
-                            data: latencies,
-                            borderColor: 'rgb(75, 192, 192)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            tension: 0.1,
-                            pointRadius: 3,
-                            pointHoverRadius: 5,
-                            _query: {json.dumps(query)}
-                        }}]
+                        datasets: [
+                            {{
+                                label: 'Avg Latency ± Std Dev',
+                                data: upperBounds,
+                                borderColor: 'transparent',
+                                backgroundColor: 'rgba(75, 192, 192, 0.25)',
+                                fill: '+2',
+                                tension: 0.1,
+                                pointRadius: 0,
+                                pointHoverRadius: 0,
+                                order: 2,
+                                showLine: false
+                            }},
+                            {{
+                                label: 'Avg Latency',
+                                data: latencies,
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                tension: 0.1,
+                                pointRadius: 3,
+                                pointHoverRadius: 5,
+                                fill: false,
+                                _query: {json.dumps(query)},
+                                order: 1
+                            }},
+                            {{
+                                label: '',
+                                data: lowerBounds,
+                                borderColor: 'transparent',
+                                backgroundColor: 'transparent',
+                                fill: false,
+                                tension: 0.1,
+                                pointRadius: 0,
+                                pointHoverRadius: 0,
+                                order: 2,
+                                showLine: false
+                            }}
+                        ]
                     }},
                     options: {{
                         responsive: true,
@@ -725,7 +783,17 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                                         return 'Date: ' + dateLabel;
                                     }},
                                     label: function(context) {{
-                                        return 'Latency: ' + context.parsed.y.toFixed(2) + ' ms';
+                                        const datasetIndex = context.datasetIndex;
+                                        if (datasetIndex === 1) {{
+                                            // Main latency line
+                                            const idx = context.dataIndex;
+                                            return 'Avg Latency: ' + latencies[idx].toFixed(2) + ' ms (±' + stddevs[idx].toFixed(2) + ' ms)';
+                                        }}
+                                        return '';
+                                    }},
+                                    filter: function(tooltipItem) {{
+                                        // Only show tooltip for the main latency line (dataset 1)
+                                        return tooltipItem.datasetIndex === 1;
                                     }}
                                 }}
                             }},
