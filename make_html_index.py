@@ -513,6 +513,10 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                         instance.data.datasets[2].data = lowerBounds;
                     }}
                     
+                    // Store latencies and stddevs on the chart instance for tooltip access
+                    instance._latencies = data.latencies;
+                    instance._stddevs = data.stddevs;
+                    
                     // Update annotations based on new dates
                     const newAnnotations = [];
                     data.dates.forEach((dateStr, idx) => {{
@@ -786,9 +790,14 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                                     label: function(context) {{
                                         const datasetIndex = context.datasetIndex;
                                         if (datasetIndex === 1) {{
-                                            // Main latency line
+                                            // Main latency line - read from chart instance's stored data
                                             const idx = context.dataIndex;
-                                            return 'Avg Latency: ' + latencies[idx].toFixed(2) + ' ms (±' + stddevs[idx].toFixed(2) + ' ms)';
+                                            const chartInstance = context.chart;
+                                            const currentLatencies = chartInstance._latencies || latencies;
+                                            const currentStddevs = chartInstance._stddevs || stddevs;
+                                            if (idx >= 0 && idx < currentLatencies.length && idx < currentStddevs.length) {{
+                                                return 'Avg Latency: ' + currentLatencies[idx].toFixed(2) + ' ms (±' + currentStddevs[idx].toFixed(2) + ' ms)';
+                                            }}
                                         }}
                                         return '';
                                     }},
@@ -874,6 +883,10 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                         }}
                     }}
                 }});
+                
+                // Store latencies and stddevs on the chart instance for tooltip access
+                chartInstance._latencies = latencies;
+                chartInstance._stddevs = stddevs;
                 
                 // Store chart instance for result type switching
                 chartInstances['{chart_id}'] = chartInstance;
