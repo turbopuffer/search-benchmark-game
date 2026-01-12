@@ -558,16 +558,18 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                         
                         newAnnotations.forEach((ann, idx) => {{
                             const annotationKey = `annotation_${{idx}}`;
-                            const isEven = idx % 2 === 0;
-                            const position = isEven ? 'start' : 'end';
-                            const baseOffset = isEven ? -6 : 6;
-                            const staggerOffset = (idx % 4 < 2) ? 0 : (isEven ? -12 : 12);
-                            const yAdjust = baseOffset + staggerOffset;
+                            // Always display annotations at the top
+                            const position = 'end';
+                            const yAdjust = 0; // Fixed offset from top
                             
-                            let labelText = ann.text;
+                            // Build full description for tooltip
+                            let fullDescription = ann.text;
                             if (ann.pr) {{
-                                labelText += ' #' + ann.pr;
+                                fullDescription += ' (PR #' + ann.pr + ')';
                             }}
+                            
+                            // Use numeric identifier (1-indexed)
+                            const numericId = (idx + 1).toString();
                             
                             annotationConfig.annotations[annotationKey] = {{
                                 type: 'line',
@@ -578,12 +580,12 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                                 borderDash: [5, 5],
                                 label: {{
                                     display: true,
-                                    content: labelText,
+                                    content: numericId,
                                     position: position,
                                     backgroundColor: ann.pr ? 'rgba(255, 99, 132, 0.9)' : 'rgba(255, 99, 132, 0.8)',
                                     color: 'white',
                                     font: {{
-                                        size: 10,
+                                        size: 12,
                                         weight: 'bold'
                                     }},
                                     padding: {{
@@ -593,8 +595,15 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                                         right: 4
                                     }},
                                     xAdjust: 0,
-                                    yAdjust: yAdjust
-                                }}
+                                    yAdjust: yAdjust,
+                                    // Store full description for tooltip
+                                    _fullDescription: fullDescription,
+                                    _pr: ann.pr
+                                }},
+                                // Store annotation info for hover tooltip
+                                _annIndex: idx,
+                                _fullDescription: fullDescription,
+                                _pr: ann.pr
                             }};
                         }});
                         
@@ -696,22 +705,21 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                 }};
                 
                 // Add vertical line annotations for each annotated date
-                // Use staggered vertical positions to prevent overlap
                 annotations.forEach((ann, idx) => {{
                     const annotationKey = `annotation_${{idx}}`;
-                    // Build compact label text with optional PR link indicator
-                    let labelText = ann.text;
+                    
+                    // Build full description for tooltip
+                    let fullDescription = ann.text;
                     if (ann.pr) {{
-                        labelText += ' #' + ann.pr;
+                        fullDescription += ' (PR #' + ann.pr + ')';
                     }}
                     
-                    // Stagger labels vertically: alternate between top and bottom, with slight offsets
-                    const isEven = idx % 2 === 0;
-                    const position = isEven ? 'start' : 'end';
-                    // Use different yAdjust values to create staggered effect
-                    const baseOffset = isEven ? -6 : 6;
-                    const staggerOffset = (idx % 4 < 2) ? 0 : (isEven ? -12 : 12);
-                    const yAdjust = baseOffset + staggerOffset;
+                    // Use numeric identifier (1-indexed)
+                    const numericId = (idx + 1).toString();
+                    
+                    // Always display annotations at the top
+                    const position = 'end';
+                    const yAdjust = 0; // Fixed offset from top
                     
                     annotationConfig.annotations[annotationKey] = {{
                         type: 'line',
@@ -722,12 +730,12 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                         borderDash: [5, 5],
                         label: {{
                             display: true,
-                            content: labelText,
+                            content: numericId,
                             position: position,
                             backgroundColor: ann.pr ? 'rgba(255, 99, 132, 0.9)' : 'rgba(255, 99, 132, 0.8)',
                             color: 'white',
                             font: {{
-                                size: 10,
+                                size: 12,
                                 weight: 'bold'
                             }},
                             padding: {{
@@ -738,11 +746,13 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                             }},
                             xAdjust: 0,
                             yAdjust: yAdjust,
-                            // Store PR number for click handler
+                            // Store full description for tooltip
+                            _fullDescription: fullDescription,
                             _pr: ann.pr
                         }},
-                        // Store annotation index and PR for click handling
+                        // Store annotation info for hover tooltip
                         _annIndex: idx,
+                        _fullDescription: fullDescription,
                         _pr: ann.pr
                     }};
                 }});
@@ -941,21 +951,52 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                     // Zoom events might not be available, that's OK
                 }}
                 
-                // Make canvas cursor pointer when hovering over annotations with PRs
+                // Create tooltip element for annotation hover
+                const tooltip = document.createElement('div');
+                tooltip.id = 'annotation-tooltip-{chart_id}';
+                tooltip.style.cssText = 'position: absolute; background: rgba(0, 0, 0, 0.8); color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; pointer-events: none; z-index: 1000; display: none; max-width: 300px;';
+                document.body.appendChild(tooltip);
+                
+                // Make canvas cursor pointer when hovering over annotations and show tooltip
                 const canvas = document.getElementById('{chart_id}');
                 canvas.addEventListener('mousemove', function(event) {{
                     const canvasPosition = Chart.helpers.getRelativePosition(event, chartInstance);
                     const xScale = chartInstance.scales.x;
+                    const yScale = chartInstance.scales.y;
                     const xValue = xScale.getValueForPixel(canvasPosition.x);
+                    const yValue = yScale.getValueForPixel(canvasPosition.y);
                     
-                    // Check if mouse is near an annotation with PR
-                    let nearAnnotationWithPR = false;
-                    annotations.forEach(ann => {{
-                        if (Math.abs(ann.x - xValue) < 0.5 && ann.pr) {{
-                            nearAnnotationWithPR = true;
+                    // Check if mouse is near an annotation
+                    let hoveredAnnotation = null;
+                    let minDistance = Infinity;
+                    annotations.forEach((ann, idx) => {{
+                        const distance = Math.abs(ann.x - xValue);
+                        if (distance < 0.5 && distance < minDistance) {{
+                            minDistance = distance;
+                            hoveredAnnotation = {{
+                                ...ann,
+                                index: idx,
+                                numericId: (idx + 1).toString()
+                            }};
                         }}
                     }});
-                    canvas.style.cursor = nearAnnotationWithPR ? 'pointer' : 'default';
+                    
+                    if (hoveredAnnotation) {{
+                        canvas.style.cursor = hoveredAnnotation.pr ? 'pointer' : 'help';
+                        // Show tooltip with full description
+                        const rect = canvas.getBoundingClientRect();
+                        tooltip.style.display = 'block';
+                        tooltip.textContent = hoveredAnnotation.numericId + ': ' + hoveredAnnotation.text + (hoveredAnnotation.pr ? ' (PR #' + hoveredAnnotation.pr + ')' : '');
+                        tooltip.style.left = (rect.left + canvasPosition.x + 10) + 'px';
+                        tooltip.style.top = (rect.top + canvasPosition.y - 30) + 'px';
+                    }} else {{
+                        canvas.style.cursor = 'default';
+                        tooltip.style.display = 'none';
+                    }}
+                }});
+                
+                canvas.addEventListener('mouseleave', function() {{
+                    tooltip.style.display = 'none';
                 }});
             }})();
         </script>
