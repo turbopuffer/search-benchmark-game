@@ -517,6 +517,26 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                     instance._latencies = data.latencies;
                     instance._stddevs = data.stddevs;
                     
+                    // Calculate and update Y-axis minimum
+                    function calculateYAxisMin(lats, lowers) {{
+                        const filteredLowerBounds = lowers.filter(v => v > 0);
+                        const minLowerBound = filteredLowerBounds.length > 0 ? Math.min(...filteredLowerBounds) : null;
+                        const minLatency = lats.length > 0 ? Math.min(...lats) : 0;
+                        const overallMin = minLowerBound !== null ? Math.min(minLowerBound, minLatency) : minLatency;
+                        return overallMin > 0 ? overallMin * 0.95 : 0; // 5% padding below minimum
+                    }}
+                    const newYAxisMin = calculateYAxisMin(data.latencies, lowerBounds);
+                    
+                    // Update Y-axis minimum
+                    if (instance.options.scales && instance.options.scales.y) {{
+                        instance.options.scales.y.min = newYAxisMin;
+                    }}
+                    
+                    // Update zoom limits to respect new Y-axis minimum
+                    if (instance.options.plugins && instance.options.plugins.zoom && instance.options.plugins.zoom.limits) {{
+                        instance.options.plugins.zoom.limits.y.min = newYAxisMin;
+                    }}
+                    
                     // Update annotations based on new dates
                     const newAnnotations = [];
                     data.dates.forEach((dateStr, idx) => {{
@@ -659,6 +679,16 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                 // Prepare data for stddev blur effect (upper and lower bounds)
                 const upperBounds = latencies.map((lat, idx) => lat + stddevs[idx]);
                 const lowerBounds = latencies.map((lat, idx) => Math.max(0, lat - stddevs[idx]));
+                
+                // Calculate minimum value for Y axis (from lower bounds with small padding)
+                function calculateYAxisMin(lats, lowers) {{
+                    const filteredLowerBounds = lowers.filter(v => v > 0);
+                    const minLowerBound = filteredLowerBounds.length > 0 ? Math.min(...filteredLowerBounds) : null;
+                    const minLatency = lats.length > 0 ? Math.min(...lats) : 0;
+                    const overallMin = minLowerBound !== null ? Math.min(minLowerBound, minLatency) : minLatency;
+                    return overallMin > 0 ? overallMin * 0.95 : 0; // 5% padding below minimum
+                }}
+                const yAxisMin = calculateYAxisMin(latencies, lowerBounds);
                 
                 // Build annotation configuration
                 const annotationConfig = {{
@@ -832,7 +862,7 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                                 }},
                                 limits: {{
                                     x: {{min: 'original', max: 'original'}},
-                                    y: {{min: 'original', max: 'original'}}
+                                    y: {{min: yAxisMin, max: 'original'}}
                                 }}
                             }}
                         }},
@@ -878,7 +908,8 @@ def generate_html(all_query_data, query_order, date_annotations, result_types, o
                                     display: true,
                                     text: 'Latency (ms)'
                                 }},
-                                beginAtZero: true
+                                beginAtZero: false,
+                                min: yAxisMin
                             }}
                         }}
                     }}
