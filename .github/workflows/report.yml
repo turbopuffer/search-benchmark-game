@@ -65,8 +65,6 @@ jobs:
           export RUSTFLAGS="-C target-cpu=native --cfg tokio_unstable"
           # Ensure we wait for reindex after full compaction to complete.
           sed -i 's/^\(wait_for_indexing_to_finish = \).*/\1true/' settings/default.toml
-          # Temporary override to enable all block-based settings.
-          sed -i 's/^\(enable_block_based_maxscore = \).*/\1true/' settings/default.toml
 
           # Build and run tpuf.
           cargo build --release --bin tpuf
