@@ -26,6 +26,8 @@ ANNOTATIONS = {
     '2025-12-19T10-50-45': 'Switch to ENV=benchmark',
     '2025-12-28T18-52-58': 'Delete namespace prior to pushing data',
     '2026-01-08T10-48-04': { 'text': 'Use bit sets as backing storage for dense blocks', 'pr': 6473 },
+    '2026-01-20T10-49-08': { 'text': 'Refactor MAXSCOREClause into a mix of a struct and an enum', 'pr': 6719 },
+    '2026-01-22T10-49-43': { 'text': 'Add support for ranking by attribute', 'pr': 6695 },
 }
 
 
