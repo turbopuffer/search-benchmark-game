@@ -1,16 +1,27 @@
 {"query": "the", "tags": ["term"]}
 {"query": "search", "tags": ["term"]}
 {"query": "new york", "tags": ["union", "union:num_tokens_2"]}
+{"query": "+new +york", "tags": ["intersection", "intersection:num_tokens_2"]}
 {"query": "san francisco", "tags": ["union", "union:num_tokens_2"]}
+{"query": "+san +francisco", "tags": ["intersection", "intersection:num_tokens_2"]}
 {"query": "the who", "tags": ["union", "union:num_tokens_2"]}
+{"query": "+the +who", "tags": ["intersection", "intersection:num_tokens_2"]}
 {"query": "the incredibles", "tags": ["union", "union:num_tokens_2"]}
+{"query": "+the +incredibles", "tags": ["intersection", "intersection:num_tokens_2"]}
 {"query": "new york population", "tags": ["union", "union:num_tokens_3"]}
+{"query": "+new +york +population", "tags": ["intersection", "intersection:num_tokens_3"]}
 {"query": "world bank president", "tags": ["union", "union:num_tokens_3"]}
+{"query": "+world +bank +president", "tags": ["intersection", "intersection:num_tokens_3"]}
 {"query": "united states constitution", "tags": ["union", "union:num_tokens_3"]}
+{"query": "+united +states +constitution", "tags": ["intersection", "intersection:num_tokens_3"]}
 {"query": "law school rankings", "tags": ["union", "union:num_tokens_3"]}
+{"query": "+law +school +rankings", "tags": ["intersection", "intersection:num_tokens_3"]}
 {"query": "lord of the rings", "tags": ["union", "union:num_tokens_4"]}
+{"query": "+lord +of +the +rings", "tags": ["intersection", "intersection:num_tokens_4"]}
 {"query": "story of a girl", "tags": ["union", "union:num_tokens_4"]}
+{"query": "+story +of +a +girl", "tags": ["intersection", "intersection:num_tokens_4"]}
 {"query": "to be or not to be", "tags": ["union", "union:num_tokens_4"]}
+{"query": "+to +be +or +not +to +be", "tags": ["intersection", "intersection:num_tokens_4"]}
 {"query": "arsenal player 1998 forward goal non flying dutch", "tags": ["union", "union:num_tokens_5_10"]}
 {"query": "france president world war resistance london appeal", "tags": ["union", "union:num_tokens_5_10"]}
 {"query": "pop singer songwriter born 1989 won best country song time person of year", "tags": ["union", "union:num_tokens_10_15"]}

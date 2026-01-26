@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::io::BufRead;
 use std::sync::LazyLock;
 
@@ -40,39 +41,98 @@ async fn main() -> Result<(), anyhow::Error> {
             "TOP_1000_FILTER_80%" => (1000, Some("80%")),
             "TOP_1000_FILTER_20%" => (1000, Some("20%")),
             "TOP_1000_FILTER_5%" => (1000, Some("5%")),
+            "COUNT" => (0, None),
+            "COUNT_FILTER_80%" => (0, Some("80%")),
+            "COUNT_FILTER_20%" => (0, Some("20%")),
+            "COUNT_FILTER_5%" => (0, Some("5%")),
             _ => {
                 println!("Unsupported command: {}", command);
                 continue;
             }
         };
-        let body = match filter {
-            Some(filter) => serde_json::json!({
-                "rank_by": [ "text", "BM25", query ],
-                "filters": [ "filter", "Contains", filter],
-                "top_k": top_k,
-                "consistency": {"level": "eventual"},
-            }),
-            None => serde_json::json!({
-                "rank_by": [ "text", "BM25", query ],
-                "top_k": top_k,
-                "consistency": {"level": "eventual"},
-            }),
-        };
-        let response = client
-            .post(&query_url)
-            .header("Authorization", &authorization_header)
-            .header("Content-Type", "application/json")
-            .json(&body)
-            .send()
-            .await?
-            .error_for_status()?
-            .json::<QueryResponse>()
-            .await?;
+        // Hack: detect if the query is an intersection query by checking for the presence of a "+"
+        // character. This works as long as queries don't mix required and optional terms.
+        let query_is_intersection = query.contains("+");
+        let mut filters = vec![];
+        if let Some(filter) = filter {
+            filters.push(["filter", "Contains", filter]);
+        }
+        if query_is_intersection {
+            filters.push(["text", "ContainsAllTokens", query]);
+        }
+        if top_k == 0 {
+            if !query_is_intersection {
+                filters.push(["text", "ContainsAnyToken", query]);
+            }
+            let body = match filters.as_slice() {
+                [filter] => serde_json::json!({
+                    "aggregate_by": {
+                        "count": ["Count"],
+                    },
+                    "filters": filter,
+                    "consistency": {"level": "eventual"},
+                }),
+                _ => serde_json::json!({
+                    "aggregate_by": {
+                        "count": ["Count"],
+                    },
+                    "filters": ["And", filters],
+                    "consistency": {"level": "eventual"},
+                }),
+            };
 
-        // Ensure the entire data set is indexed.
-        assert_eq!(response.performance.exhaustive_search_count, 0);
+            let response = client
+                .post(&query_url)
+                .header("Authorization", &authorization_header)
+                .header("Content-Type", "application/json")
+                .json(&body)
+                .send()
+                .await?
+                .error_for_status()?
+                .json::<AggregationResponse>()
+                .await?;
 
-        println!("{}", response.rows.len());
+            // Ensure the entire data set is indexed.
+            assert_eq!(response.performance.exhaustive_search_count, 0);
+
+            println!("{}", response.aggregations["count"]);
+        } else {
+            let body = match filters.as_slice() {
+                [] => serde_json::json!({
+                    "rank_by": [ "text", "BM25", query ],
+                    "top_k": top_k,
+                    "consistency": {"level": "eventual"},
+                }),
+                [filter] => serde_json::json!({
+                    "rank_by": [ "text", "BM25", query ],
+                    "filters": filter,
+                    "top_k": top_k,
+                    "consistency": {"level": "eventual"},
+                }),
+                _ => serde_json::json!({
+                    "rank_by": [ "text", "BM25", query ],
+                    "filters": ["And", filters],
+                    "top_k": top_k,
+                    "consistency": {"level": "eventual"},
+                }),
+            };
+            println!("{}", body);
+            let response = client
+                .post(&query_url)
+                .header("Authorization", &authorization_header)
+                .header("Content-Type", "application/json")
+                .json(&body)
+                .send()
+                .await?
+                .error_for_status()?
+                .json::<QueryResponse>()
+                .await?;
+
+            // Ensure the entire data set is indexed.
+            assert_eq!(response.performance.exhaustive_search_count, 0);
+
+            println!("{}", response.rows.len());
+        }
     }
     Ok(())
 }
@@ -80,6 +140,12 @@ async fn main() -> Result<(), anyhow::Error> {
 #[derive(Deserialize)]
 struct QueryResponse {
     rows: Vec<Row>,
+    performance: QueryPerformance,
+}
+
+#[derive(Deserialize)]
+struct AggregationResponse {
+    aggregations: HashMap<String, u64>,
     performance: QueryPerformance,
 }
 
