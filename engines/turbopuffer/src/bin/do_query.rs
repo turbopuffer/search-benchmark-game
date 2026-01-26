@@ -116,7 +116,6 @@ async fn main() -> Result<(), anyhow::Error> {
                     "consistency": {"level": "eventual"},
                 }),
             };
-            println!("{}", body);
             let response = client
                 .post(&query_url)
                 .header("Authorization", &authorization_header)
