@@ -48,6 +48,9 @@ async fn main() -> Result<(), anyhow::Error> {
             let _ = join_set.join_next().await.unwrap()?;
         }
     }
+    if !batch.is_empty() {
+        join_set.spawn(write_batch(mem::take(&mut batch)));
+    }
 
     for result in join_set.join_all().await {
         result?;
