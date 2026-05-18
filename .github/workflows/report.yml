@@ -103,13 +103,13 @@ jobs:
           # step of the index job is actually completed. We poll the logs to
           # wait for the actual index job to complete.
           # TODO: find a better way to do this?
-          for i in $(seq 1 10); do
+          for i in $(seq 1 100); do
             grep -q "done incremental indexing" tpuf.log && break
             echo "waiting for compaction job from initial index to complete..."
             sleep 10
           done
           if ! grep -q "done incremental indexing" tpuf.log; then
-            echo "WARNING: gave up waiting for compaction job from initial index after 10 iterations"
+            echo "WARNING: gave up waiting for compaction job from initial index after 100 iterations"
           fi
 
           # Trigger a full recompaction.
@@ -117,13 +117,13 @@ jobs:
           target/release/tpuf trigger-full-compaction $TURBOPUFFER_API_KEY search-benchmark-game
 
           # The above compaction is expected to fail due to a 30s timeout. Sigh.
-          for i in $(seq 1 10); do
+          for i in $(seq 1 100); do
             [[ $(grep --count "done incremental indexing" tpuf.log) -ge 2 ]] && break
             echo "waiting for compaction job from reindex to complete..."
             sleep 10
           done
           if [[ $(grep --count "done incremental indexing" tpuf.log) -lt 2 ]]; then
-            echo "WARNING: gave up waiting for compaction job from reindex after 10 iterations"
+            echo "WARNING: gave up waiting for compaction job from reindex after 100 iterations"
           fi
 
       - name: Run benchmarks
