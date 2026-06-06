@@ -10,8 +10,8 @@ COMMANDS ?=  TOP_10 TOP_100 TOP_1000 COUNT TOP_100_FILTER_5% TOP_100_FILTER_20% 
 # ENGINES ?= tantivy-0.16 tantivy-0.17 tantivy-0.18 tantivy-0.19
 # ENGINES ?= tantivy-0.22 tantivy-0.24 tantivy-0.25 lucene-10.4.0 lucene-10.4.0-bp
 #ENGINES ?= turbopuffer
-#ENGINES ?= tantivy-0.25 lucene-10.4.0
-ENGINES ?= turbopuffer tantivy-0.25 lucene-10.4.0
+#ENGINES ?= tantivy-0.26 lucene-10.4.0
+ENGINES ?= turbopuffer tantivy-0.26 lucene-10.4.0
 PORT ?= 8080
 
 NOW = $(shell date +%Y-%m-%dT%H-%M-%S)
