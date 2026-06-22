@@ -68,8 +68,9 @@ jobs:
 
           # Build and run tpuf.
           cargo build --release --bin tpuf
+          # Use a custom blob system prefix to avoid conflicting with other devboxes
           # Use ENV=benchmark instead of the default, which is "test".
-          ENV=benchmark HOSTNAME=`hostname` cargo run --release --bin tpuf server &> tpuf.log &
+          env 'TPUF_BLOB.SYSTEM_PREFIX=system/search-benchmark-game' ENV=benchmark HOSTNAME=`hostname` cargo run --release --bin tpuf server &> tpuf.log &
 
           # Wait for tpuf to become available.
           # TODO: do this more robustly.
