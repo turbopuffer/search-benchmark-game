@@ -9,12 +9,14 @@ const API_KEY: LazyLock<String> = LazyLock::new(|| {
     std::env::var("TURBOPUFFER_API_KEY").expect("TURBOPUFFER_API_KEY must be set")
 });
 
-const NAMESPACE: &str = "search-benchmark-game";
+static NAMESPACE: LazyLock<String> = LazyLock::new(|| {
+    std::env::var("TURBOPUFFER_NAMESPACE").unwrap_or_else(|_| "search-benchmark-game".to_string())
+});
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     let client = reqwest::Client::new();
-    let query_url = format!("{API_URL}/v2/namespaces/{NAMESPACE}/query");
+    let query_url = format!("{API_URL}/v2/namespaces/{}/query", NAMESPACE.as_str());
     let authorization_header = format!("Bearer {}", API_KEY.as_str());
     let stdin = std::io::stdin();
     for line in stdin.lock().lines() {

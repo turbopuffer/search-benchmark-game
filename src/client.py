@@ -75,8 +75,8 @@ def printProgressBar (progress, prefix = '', suffix = '', decimals = 1, length =
     if progress >= 1:
         print()
 
-WARMUP_TIME = 60 # 60 seconds
-NUM_ITER = 30
+WARMUP_TIME = int(os.environ.get('WARMUP_TIME', 60)) # seconds
+NUM_ITER = int(os.environ.get('NUM_ITER', 30))
 
 if __name__ == "__main__":
     import sys
