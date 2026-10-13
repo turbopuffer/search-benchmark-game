@@ -11,7 +11,9 @@ const API_KEY: LazyLock<String> = LazyLock::new(|| {
     std::env::var("TURBOPUFFER_API_KEY").expect("TURBOPUFFER_API_KEY must be set")
 });
 
-const NAMESPACE: &str = "search-benchmark-game";
+static NAMESPACE: LazyLock<String> = LazyLock::new(|| {
+    std::env::var("TURBOPUFFER_NAMESPACE").unwrap_or_else(|_| "search-benchmark-game".to_string())
+});
 const BATCH_SIZE: usize = 10_000;
 const MAX_CONCURRENCY: usize = 32;
 
@@ -20,9 +22,9 @@ async fn main() -> Result<(), anyhow::Error> {
     env_logger::init();
 
     if let Ok(_) = delete_namespace().await {
-        println!("namespace {NAMESPACE} deleted");
+        println!("namespace {} deleted", NAMESPACE.as_str());
     } else {
-        println!("namespace {NAMESPACE} not found, ignoring");
+        println!("namespace {} not found, ignoring", NAMESPACE.as_str());
     }
 
     let mut join_set = JoinSet::new();
@@ -64,7 +66,7 @@ async fn main() -> Result<(), anyhow::Error> {
 async fn delete_namespace() -> Result<(), anyhow::Error> {
     let client = reqwest::Client::new();
     client
-        .delete(format!("{API_URL}/v1/namespaces/{NAMESPACE}"))
+        .delete(format!("{API_URL}/v1/namespaces/{}", NAMESPACE.as_str()))
         .header("Authorization", format!("Bearer {}", API_KEY.as_str()))
         .send()
         .await?
@@ -75,7 +77,7 @@ async fn delete_namespace() -> Result<(), anyhow::Error> {
 async fn write_batch(batch: Vec<serde_json::Value>) -> Result<(), anyhow::Error> {
     let client = reqwest::Client::new();
     client
-        .post(format!("{API_URL}/v2/namespaces/{NAMESPACE}"))
+        .post(format!("{API_URL}/v2/namespaces/{}", NAMESPACE.as_str()))
         .header("Authorization", format!("Bearer {}", API_KEY.as_str()))
         .json(&serde_json::json!({
             "upsert_rows": batch,
@@ -117,7 +119,7 @@ async fn wait_for_index() -> Result<(), anyhow::Error> {
     loop {
         let client = reqwest::Client::new();
         let response = client
-            .get(format!("{API_URL}/v1/namespaces/{NAMESPACE}/metadata"))
+            .get(format!("{API_URL}/v1/namespaces/{}/metadata", NAMESPACE.as_str()))
             .header("Authorization", format!("Bearer {}", API_KEY.as_str()))
             .send()
             .await?

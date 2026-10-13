@@ -17,17 +17,21 @@ def print_diff(baseline, contender):
       print("")
     print(f"\033[1m{collection_type}\033[0m")
     print("                                            Query \\ Latency (μs)     Baseline avg  Baseline stddev    Contender avg Contender stddev            Change          p-value")    
-    print_diff_engine(baseline[collection_type][TPUF], contender[collection_type][TPUF])
+    ratios = print_diff_engine(baseline[collection_type][TPUF], contender[collection_type][TPUF])
+    geomean = 100 * (np.exp(np.mean(np.log(ratios))) - 1)
+    print(f"{'geomean change':>64} {'':>67} {GREEN if geomean <= 0 else RED}{geomean:16.2f}%{COLOR_END}")
 
 def print_diff_engine(baseline, contender):
   baseline_query_to_latencies = {}
   for query in baseline:
     baseline_query_to_latencies[query["query"]] = query["duration"]
 
+  ratios = []
   for query in contender:
     query_str = query["query"]
     if query_str not in baseline_query_to_latencies:
       print("[WARN] Query [%s] not found in baseline results\n" %query_str)
+      continue
 
     baseline_durations = np.array(baseline_query_to_latencies[query_str])
     contender_durations = np.array(query["duration"])
@@ -40,8 +44,10 @@ def print_diff_engine(baseline, contender):
     contender_mean = np.mean(contender_durations)
     contender_stddev = np.std(contender_durations, ddof=1)
     change = 100 * (contender_mean - baseline_mean) / baseline_mean
+    ratios.append(contender_mean / baseline_mean)
     p_value = stats.ttest_ind(baseline_durations, contender_durations, equal_var=True)[1]
     print(f"{query_str:>64} {baseline_mean:16.2f} {baseline_stddev:16.2f} {contender_mean:16.2f} {contender_stddev:16.2f} {GREEN if change <= 0 else RED}{change:16.2f}%{COLOR_END} {p_value:16.2f}")
+  return ratios
 
 
 if __name__ == '__main__':
