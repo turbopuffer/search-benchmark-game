@@ -94,7 +94,7 @@ jobs:
       - name: Build indexes
         run: make index
 
-      - name: Trigger full compaction
+      - name: Trigger full merge and compaction
         run: |
           cd turbopuffer
           source devbox/env.sh
@@ -106,12 +106,16 @@ jobs:
           # TODO: find a better way to do this?
           for i in $(seq 1 100); do
             grep -q "done incremental indexing" tpuf.log && break
-            echo "waiting for compaction job from initial index to complete..."
+            echo "waiting for merge+compaction job from initial index to complete..."
             sleep 10
           done
           if ! grep -q "done incremental indexing" tpuf.log; then
-            echo "WARNING: gave up waiting for compaction job from initial index after 100 iterations"
+            echo "WARNING: gave up waiting for merge+compaction job from initial index after 100 iterations"
           fi
+
+          # Trigger a full merge.
+          # Only works with the test API key where the API key *is* the org ID.
+          target/release/tpuf segments-full-merge $TURBOPUFFER_API_KEY search-benchmark-game
 
           # Trigger a full recompaction.
           # Only works with the test API key where the API key *is* the org ID.
