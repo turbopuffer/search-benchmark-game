@@ -210,6 +210,8 @@ class Benchmark extends React.Component {
         </fieldset>
       </form>
       <hr />
+      {this.props.data.recall_baseline &&
+        <p>Recall baseline: <code>{this.props.data.recall_baseline.revision}</code> (indexed results)</p>}
       <table>
         <thead>
           <tr>
@@ -225,7 +227,7 @@ class Benchmark extends React.Component {
           { stats_row(data_view.engines, "P90", "percentile", "p90") }
           { stats_row(data_view.engines, "P99", "percentile", "p99") }
           { Object.values(data_view.engines).some(engine => engine && engine.recall !== undefined) &&
-            stats_row(data_view.engines, "AVERAGE RECALL", "average", "recall", "%") }
+            stats_row(data_view.engines, this.props.data.recall_baseline ? "AVERAGE BASELINE RECALL" : "AVERAGE RECALL", "average", "recall", "%") }
           {
             Object.entries(data_view.queries).map(kv => {
               var query = kv[0];
@@ -243,8 +245,10 @@ class Benchmark extends React.Component {
                         <div className="timing-variation">{formatPercentVariation(cell_data.variation)}</div>
                         <div className="count">{numberWithCommas(cell_data.count)} docs</div>
                         {cell_data.recall !== undefined &&
-                          <div className="recall" title={"Returned: " + cell_data.recall.avg_ann_count + "; exhaustive: " + cell_data.recall.avg_exhaustive_count}>
-                            {(100 * cell_data.recall.avg_recall).toFixed(2)}% recall
+                          <div className="recall" title={cell_data.recall.method === "indexed_baseline"
+                            ? "Matched: " + cell_data.recall.matched_count + "; baseline: " + cell_data.recall.baseline_count + "; returned: " + cell_data.recall.result_count
+                            : "Returned: " + cell_data.recall.avg_ann_count + "; exhaustive: " + cell_data.recall.avg_exhaustive_count}>
+                            {(100 * cell_data.recall.avg_recall).toFixed(2)}% {cell_data.recall.method === "indexed_baseline" ? "baseline recall" : "recall"}
                           </div>}
                       </td>;
                     }
