@@ -6,8 +6,6 @@ import json
 import random
 from collections import defaultdict
 
-COMMANDS = os.environ['COMMANDS'].split(' ')
-
 class SearchClient:
 
     def __init__(self, engine):
@@ -50,9 +48,10 @@ class Query(object):
         self.tags = tags
 
 def read_queries(query_path):
-    for q in open(query_path):
-        c = json.loads(q)
-        yield Query(c["query"], c["tags"])
+    with open(query_path) as file:
+        for q in file:
+            c = json.loads(q)
+            yield Query(c["query"], c["tags"])
 
 # Print progress, borrowed from https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters
 def printProgressBar (progress, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
@@ -80,6 +79,7 @@ NUM_ITER = int(os.environ.get('NUM_ITER', 30))
 
 if __name__ == "__main__":
     import sys
+    COMMANDS = os.environ['COMMANDS'].split()
     random.seed(2)
     query_path = sys.argv[1]
     engines = sys.argv[2:]
