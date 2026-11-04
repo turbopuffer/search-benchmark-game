@@ -127,7 +127,7 @@ def main():
     parser = argparse.ArgumentParser(description="Measure end-to-end query throughput")
     parser.add_argument("engines", nargs="+")
     parser.add_argument("--queries", default="queries.txt")
-    parser.add_argument("--commands", nargs="+", default=["TOP_10"])
+    parser.add_argument("--commands", nargs="+", default=["TOP_10", "TOP_100", "TOP_1000", "COUNT"])
     parser.add_argument("--concurrency", nargs="+", type=int,
                         help="Explicit worker counts; omit for an automatic doubling sweep")
     parser.add_argument("--max-workers", type=int, default=64)

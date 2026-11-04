@@ -131,7 +131,7 @@ class ThroughputTests(unittest.TestCase):
             queries.write_text('{"query": "a", "tags": []}\n')
             output = Path(directory) / "results.json"
             argv = ["throughput.py", "fake", "--queries", str(queries),
-                    "--concurrency", "1", "--repeats", "3", "--output", str(output)]
+                    "--commands", "TOP_10", "--concurrency", "1", "--repeats", "3", "--output", str(output)]
             runs = [{"qps": qps, "latency_us": {"p50": 1, "p95": 2, "p99": 3}}
                     for qps in (10, 30, 20)]
             with patch.object(sys, "argv", argv), patch("throughput.measure", side_effect=runs):

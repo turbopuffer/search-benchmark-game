@@ -135,7 +135,7 @@ See `CONTRIBUTE.md`.
 Run `src/throughput.py` to measure throughput after building the engines and indices.
 
 ```
-python3 src/throughput.py tantivy-0.26 lucene-10.4.0 --commands TOP_10
+python3 src/throughput.py tantivy-0.26 lucene-10.4.0
 ```
 
 The benchmark increases concurrency until throughput plateaus or reaches 64 workers.
