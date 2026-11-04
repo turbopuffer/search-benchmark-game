@@ -140,7 +140,7 @@ def main():
                         help="Total passes over the query set per run, across all workers")
     parser.add_argument("--warmup", type=float, default=60,
                         help="Minimum warmup seconds per worker (at least one full pass)")
-    parser.add_argument("--repeats", type=int, default=3)
+    parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument("--output", default="throughput-results.json")
     args = parser.parse_args()
     if args.iterations is None and args.duration is None:
