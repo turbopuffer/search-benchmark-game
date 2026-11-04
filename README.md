@@ -129,3 +129,56 @@ And open the following in your browser: [http://localhost:8000/](http://localhos
 # Adding another search engine
 
 See `CONTRIBUTE.md`.
+
+## Measuring throughput
+
+Build the engines and their indices first (`make compile` and `make index`).
+The throughput runner uses Python threads, with one engine subprocess per worker:
+
+```sh
+python3 src/throughput.py tantivy-0.26 lucene-10.4.0 \
+  --commands TOP_10 --max-workers 64 \
+  --warmup 60 --duration 60 --repeats 3
+```
+
+Add `turbopuffer` to the engine list to measure the configured turbopuffer server;
+its usual API key, namespace, and running-server setup are required.
+
+The default sweep doubles workers from 1 up to `--max-workers` (default 64).
+It stops early after two consecutive levels each improve median QPS by less
+than `--min-gain` over the previous best (default 0.05, or 5%). It then tests
+the integer midpoints between the best measured level and its tested neighbors.
+The output records the best measured QPS and worker count, and whether the sweep
+stopped at a plateau or the worker cap. This is a heuristic, not proof of a global
+maximum. Use `--concurrency 1 2 4 8 16 32 64` to run explicit levels without early
+stopping or refinement. The cap applies to automatic sweeps only.
+
+Every worker warms up for at least the requested time and one full query pass.
+Workers then start together. By default, each worker cycles through the full
+seeded, shuffled query list, starting at a different offset, for `--duration`
+seconds (default 60). At the deadline, workers stop submitting requests and
+finish outstanding ones. The elapsed time includes this final drain. Every
+worker traverses the same mix, but partial final passes can change the exact
+query proportions between runs.
+
+Alternatively, use `--iterations 30` instead of `--duration` for a fixed workload
+of `30 * number of queries` requests divided across workers. This preserves the
+exact query mix across levels, but higher concurrency can make runs very short,
+and concurrency may fall near the end as workers finish at different times.
+
+QPS is completed requests divided by wall time from the synchronized start to
+the last response. Warmup, process startup, and cleanup are excluded. The runner
+prints QPS and p50/p95/p99 request latency for each run and median QPS across
+repeats. Results, including elapsed seconds, are saved to `throughput-results.json`
+(override with `--output`). Unsupported commands and request failures abort the
+run rather than counting as successful queries. Requests have no driver timeout.
+
+These are end-to-end measurements, including Python and pipe overhead, plus HTTP
+and response decoding for turbopuffer. Tantivy and Lucene use multiple processes
+reading the same index, with separate process memory and shared OS page cache.
+The turbopuffer subprocesses all query the same server. Keep engine hardware
+resources fixed and report the process count when comparing results. This is a
+closed-loop workload: each worker sends its next request after receiving a
+response, rather than submitting at a fixed arrival rate.
+
+Run the driver tests with `python3 -m unittest discover -s src -p 'test_*.py'`.
