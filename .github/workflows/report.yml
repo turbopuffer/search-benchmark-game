@@ -94,38 +94,47 @@ jobs:
       - name: Build indexes
         run: make index
 
-      - name: Trigger full compaction
+      - name: Merge segments
         run: |
           cd turbopuffer
           source devbox/env.sh
 
-          # The `make index` step waits for the /metadata endpoint to stop
-          # reporting unindexed bytes, but this occurs BEFORE the compaction
-          # step of the index job is actually completed. We poll the logs to
-          # wait for the actual index job to complete.
-          # TODO: find a better way to do this?
+          # `make index` returns once /metadata reports no unindexed bytes, which is
+          # before the index job completes. Wait for it, so that nothing is indexing
+          # while segments merge.
           for i in $(seq 1 100); do
             grep -q "done incremental indexing" tpuf.log && break
-            echo "waiting for compaction job from initial index to complete..."
+            echo "waiting for the initial index job to complete..."
             sleep 10
           done
           if ! grep -q "done incremental indexing" tpuf.log; then
-            echo "WARNING: gave up waiting for compaction job from initial index after 100 iterations"
+            echo "ERROR: gave up waiting for the initial index job after 100 iterations"
+            exit 1
           fi
 
-          # Trigger a full recompaction.
-          # Only works with the test API key where the API key *is* the org ID.
-          target/release/tpuf trigger-full-compaction $TURBOPUFFER_API_KEY search-benchmark-game
-
-          # The above compaction is expected to fail due to a 30s timeout. Sigh.
-          for i in $(seq 1 100); do
-            [[ $(grep --count "done incremental indexing" tpuf.log) -ge 2 ]] && break
-            echo "waiting for compaction job from reindex to complete..."
-            sleep 10
+          # Stop the server: the merge opens the same cache directory and debug port,
+          # and must not race with indexing.
+          target/release/tpuf begin-shutdown || pkill -f 'target/release/tpuf server'
+          for i in $(seq 1 60); do
+            pgrep -f 'target/release/tpuf server' > /dev/null || break
+            sleep 1
           done
-          if [[ $(grep --count "done incremental indexing" tpuf.log) -lt 2 ]]; then
-            echo "WARNING: gave up waiting for compaction job from reindex after 100 iterations"
-          fi
+          pkill -9 -f 'target/release/tpuf server' || true
+
+          # Merge every segment of the namespace into one. This waits for the merge
+          # to complete. Same environment as the server, so it sees the same data.
+          # Only works with the test API key where the API key *is* the org ID.
+          env 'TPUF_BLOB.SYSTEM_PREFIX=system/search-benchmark-game' ENV=benchmark HOSTNAME=`hostname` \
+            target/release/tpuf segments-full-merge $TURBOPUFFER_API_KEY search-benchmark-game
+
+          # Restart the server with the binary built earlier: `cargo run` here would
+          # rebuild, since RUSTFLAGS from the launch step don't carry over.
+          env 'TPUF_BLOB.SYSTEM_PREFIX=system/search-benchmark-game' ENV=benchmark HOSTNAME=`hostname` \
+            nohup target/release/tpuf server >> tpuf.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -s -o /dev/null http://127.0.0.1:3000 && break
+            sleep 1
+          done
 
       - name: Run benchmarks
         run: make bench
