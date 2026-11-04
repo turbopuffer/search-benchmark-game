@@ -13,6 +13,7 @@ COMMANDS ?=  TOP_10 TOP_100 TOP_1000 COUNT TOP_100_FILTER_5% TOP_100_FILTER_20% 
 #ENGINES ?= tantivy-0.26 lucene-10.4.0
 ENGINES ?= turbopuffer tantivy-0.26 lucene-10.4.0
 PORT ?= 8080
+RESULTS ?= results.json
 
 NOW = $(shell date +%Y-%m-%dT%H-%M-%S)
 
@@ -46,7 +47,7 @@ compile:
 
 serve:
 	@echo "--- Serving results ---"
-	@cp results.json web/build/results.json
+	@cp "$(RESULTS)" web/build/results.json
 	@cd web/build && python3 -m http.server $(PORT)
 
 publish:
