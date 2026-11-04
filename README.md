@@ -126,6 +126,8 @@ make serve
 To view a saved devbox run, use `make serve RESULTS=/path/to/results.json`.
 When the file includes recall measurements, the page shows per-query recall and
 the mean across measured queries in the selected collection and query type.
+The page serves the prebuilt files in `web/build`; after editing `web/src`,
+rebuild them with `cd web && npm run build` before serving.
 
 And open the following in your browser: [http://localhost:8080/](http://localhost:8080/)
 
