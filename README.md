@@ -123,7 +123,7 @@ You can then check your results out by running:
 make serve
 ```
 
-And open the following in your browser: [http://localhost:8080/](http://localhost:8080/)
+And open the following in your browser: [http://localhost:8000/](http://localhost:8000/)
 
 
 # Adding another search engine
