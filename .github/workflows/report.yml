@@ -113,13 +113,17 @@ jobs:
           fi
 
           # Stop the server: the merge opens the same cache directory and debug port,
-          # and must not race with indexing.
-          target/release/tpuf begin-shutdown || pkill -f 'target/release/tpuf server'
+          # and must not race with indexing. A graceful shutdown drains for minutes,
+          # and indexing is done, so kill it and wait for it to exit.
+          pkill -9 -f 'target/release/tpuf server' || true
           for i in $(seq 1 60); do
             pgrep -f 'target/release/tpuf server' > /dev/null || break
             sleep 1
           done
-          pkill -9 -f 'target/release/tpuf server' || true
+          if pgrep -f 'target/release/tpuf server' > /dev/null; then
+            echo "ERROR: tpuf server did not exit"
+            exit 1
+          fi
 
           # Merge every segment of the namespace into one. This waits for the merge
           # to complete. Same environment as the server, so it sees the same data.
