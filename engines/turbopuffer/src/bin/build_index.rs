@@ -47,7 +47,7 @@ async fn main() -> Result<(), anyhow::Error> {
             join_set.spawn(write_batch(mem::take(&mut batch)));
         }
         if join_set.len() >= MAX_CONCURRENCY {
-            let _ = join_set.join_next().await.unwrap()?;
+            join_set.join_next().await.unwrap()??;
         }
     }
     if !batch.is_empty() {
