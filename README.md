@@ -129,3 +129,14 @@ And open the following in your browser: [http://localhost:8000/](http://localhos
 # Adding another search engine
 
 See `CONTRIBUTE.md`.
+
+## Measuring throughput
+
+Run `src/throughput.py` to measure throughput after building the engines and indices.
+
+```
+python3 src/throughput.py tantivy-0.26 lucene-10.4.0
+```
+
+The benchmark increases concurrency until throughput plateaus or reaches 64 workers.
+The results are outputted in a `throughput-results.json` file. Use `--help` for options.
