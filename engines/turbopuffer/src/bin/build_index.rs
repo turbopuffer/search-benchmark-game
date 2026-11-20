@@ -41,7 +41,17 @@ async fn main() -> Result<(), anyhow::Error> {
         if i % 100_000 == 0 {
             println!("{}", i);
         }
-        let doc = serde_json::from_str(&line)?;
+        // turbopuffer rejects ids longer than 64 bytes
+        let mut doc: serde_json::Value = serde_json::from_str(&line)?;
+        if let Some(serde_json::Value::String(id)) = doc.get_mut("id") {
+            if id.len() > 64 {
+                let mut end = 64;
+                while !id.is_char_boundary(end) {
+                    end -= 1;
+                }
+                id.truncate(end);
+            }
+        }
         batch.push(doc);
         if batch.len() >= BATCH_SIZE {
             join_set.spawn(write_batch(mem::take(&mut batch)));
