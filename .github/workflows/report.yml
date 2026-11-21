@@ -147,6 +147,43 @@ jobs:
             exit 1
           fi
 
+      - name: Wait for a hot cache
+        run: |
+          # Load the whole namespace into the cache, then run every benchmark query until
+          # a full pass is served entirely from cache.
+          curl -sf -H "Authorization: Bearer $TURBOPUFFER_API_KEY" \
+            http://127.0.0.1:3001/v1/namespaces/search-benchmark-game/hint_cache_warm
+          python3 - <<'EOF'
+          import json, os, sys, time, urllib.request
+
+          url = "http://127.0.0.1:3001/v2/namespaces/search-benchmark-game/query"
+          headers = {
+              "Authorization": f"Bearer {os.environ['TURBOPUFFER_API_KEY']}",
+              "Content-Type": "application/json",
+          }
+          with open("queries.txt") as f:
+              queries = [json.loads(line)["query"].replace("+", "") for line in f if line.strip()]
+
+          def cache_hit_ratio(query):
+              body = {
+                  "rank_by": ["text", "BM25", query],
+                  "top_k": 10,
+                  "consistency": {"level": "eventual"},
+              }
+              req = urllib.request.Request(url, json.dumps(body).encode(), headers)
+              with urllib.request.urlopen(req) as resp:
+                  return json.load(resp)["performance"]["cache_hit_ratio"]
+
+          for attempt in range(120):
+              ratio = min(cache_hit_ratio(q) for q in queries)
+              print(f"attempt {attempt}: min cache hit ratio {ratio:.4f}", flush=True)
+              if ratio >= 1.0:
+                  sys.exit(0)
+              time.sleep(10)
+          print("ERROR: the cache did not become hot")
+          sys.exit(1)
+          EOF
+
       - name: Run benchmarks
         run: make bench
 
