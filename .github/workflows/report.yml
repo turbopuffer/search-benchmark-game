@@ -47,6 +47,7 @@ jobs:
 
     env:
       TURBOPUFFER_NAMESPACE: search-benchmark-game-${{ matrix.benchmark }}
+      TPUF_FAIRNESS.QUERY_CONCURRENCY_PER_NAMESPACE: "96"
 
     steps:
       - name: Dump system information
