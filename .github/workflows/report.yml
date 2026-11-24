@@ -14,8 +14,23 @@ env:
   TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_API_KEY }}
 
 jobs:
+  setup:
+    name: Resolve turbopuffer revision
+    runs-on: ubuntu-latest
+    outputs:
+      tpuf_sha: ${{ steps.revision.outputs.tpuf_sha }}
+    steps:
+      - name: Resolve master SHA
+        id: revision
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          tpuf_sha=$(gh api repos/turbopuffer/turbopuffer/commits/master --jq .sha)
+          echo "tpuf_sha=$tpuf_sha" >> "$GITHUB_OUTPUT"
+
   benchmark:
     name: Benchmark (${{ matrix.benchmark }})
+    needs: setup
 
     strategy:
       fail-fast: false
@@ -45,6 +60,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           repository: turbopuffer/turbopuffer
+          ref: ${{ needs.setup.outputs.tpuf_sha }}
           path: turbopuffer
           token: ${{ secrets.GH_TOKEN }}
 
