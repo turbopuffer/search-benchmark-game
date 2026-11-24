@@ -14,14 +14,21 @@ env:
   TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_API_KEY }}
 
 jobs:
-  report:
-    name: Generate report
+  benchmark:
+    name: Benchmark (${{ matrix.benchmark }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - benchmark: latency
+            target: bench
+            results: results.json
+          - benchmark: throughput
+            target: throughput
+            results: throughput-results.json
 
     runs-on: blacksmith-32vcpu-ubuntu-2404
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Dump system information
@@ -185,7 +192,40 @@ jobs:
           EOF
 
       - name: Run benchmarks
-        run: make bench
+        run: make ${{ matrix.target }}
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: benchmark-results-${{ matrix.benchmark }}
+          path: ${{ matrix.results }}
+          if-no-files-found: error
+
+      - name: Upload turbopuffer logs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: tpuf-${{ matrix.benchmark }}.log
+          path: turbopuffer/tpuf.log
+
+  publish:
+    name: Publish report
+    needs: benchmark
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - name: Download benchmark results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: benchmark-results-*
+          merge-multiple: true
 
       - name: Publish results
         run: make publish
@@ -194,13 +234,6 @@ jobs:
           GIT_AUTHOR_EMAIL: bot@turbopuffer.com
           GIT_COMMITTER_NAME: turbobot
           GIT_COMMITTER_EMAIL: bot@turbopuffer.com
-
-      - name: Upload turbopuffer logs
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        if: always()
-        with:
-          name: tpuf.log
-          path: turbopuffer/tpuf.log
 
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
