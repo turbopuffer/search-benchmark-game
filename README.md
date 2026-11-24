@@ -129,3 +129,33 @@ And open the following in your browser: [http://localhost:8000/](http://localhos
 # Adding another search engine
 
 See `CONTRIBUTE.md`.
+
+## Measuring throughput
+
+Run `src/throughput.py` to measure throughput after building the engines and indices.
+
+```
+python3 src/throughput.py tantivy-0.26 lucene-10.4.0
+```
+
+The benchmark increases concurrency until throughput plateaus or reaches 64 workers.
+The results are outputted in a `throughput-results.json` file. Use `--help` for options.
+
+`make throughput` uses the configured `ENGINES` and measures `TOP_10`, `TOP_100`,
+`TOP_1000`, and `COUNT`. Override runner options with `THROUGHPUT_ARGS`, for example:
+
+```
+make throughput THROUGHPUT_ARGS='--commands TOP_10 --concurrency 1 2 4'
+```
+
+The daily workflow runs latency and throughput on separate runners, each building
+its own engines and indexes. A publish job waits for both and combines their results.
+`make serve` also includes throughput results when the file is present. The website
+shows the best measured QPS and worker count, with all tested worker counts available
+below it. Throughput covers the full query mix and is independent of the latency
+query-type filter. Each worker starts its own engine adapter process; turbopuffer
+adapters connect to the shared server.
+
+Each worker count takes at least a 60-second warmup and a 60-second measurement by
+default. Three engines and four operations at seven worker counts take about 168
+minutes, before refinement and other overhead; sweeps can stop earlier.

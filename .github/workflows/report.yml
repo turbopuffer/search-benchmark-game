@@ -14,14 +14,39 @@ env:
   TURBOPUFFER_API_KEY: ${{ secrets.TURBOPUFFER_API_KEY }}
 
 jobs:
-  report:
-    name: Generate report
+  setup:
+    name: Resolve turbopuffer revision
+    runs-on: ubuntu-latest
+    outputs:
+      tpuf_sha: ${{ steps.revision.outputs.tpuf_sha }}
+    steps:
+      - name: Resolve master SHA
+        id: revision
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          tpuf_sha=$(gh api repos/turbopuffer/turbopuffer/commits/master --jq .sha)
+          echo "tpuf_sha=$tpuf_sha" >> "$GITHUB_OUTPUT"
+
+  benchmark:
+    name: Benchmark (${{ matrix.benchmark }})
+    needs: setup
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - benchmark: latency
+            target: bench
+            results: results.json
+          - benchmark: throughput
+            target: throughput
+            results: throughput-results.json
 
     runs-on: blacksmith-32vcpu-ubuntu-2404
 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      TURBOPUFFER_NAMESPACE: search-benchmark-game-${{ matrix.benchmark }}
 
     steps:
       - name: Dump system information
@@ -35,6 +60,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           repository: turbopuffer/turbopuffer
+          ref: ${{ needs.setup.outputs.tpuf_sha }}
           path: turbopuffer
           token: ${{ secrets.GH_TOKEN }}
 
@@ -131,7 +157,7 @@ jobs:
           # to complete. Same environment as the server, so it sees the same data.
           # Only works with the test API key where the API key *is* the org ID.
           env 'TPUF_BLOB.SYSTEM_PREFIX=system/search-benchmark-game' ENV=benchmark HOSTNAME=`hostname` \
-            target/release/tpuf segments-full-merge $TURBOPUFFER_API_KEY search-benchmark-game
+            target/release/tpuf segments-full-merge "$TURBOPUFFER_API_KEY" "$TURBOPUFFER_NAMESPACE"
 
           # Restart the server with the binary built earlier: `cargo run` here would
           # rebuild, since RUSTFLAGS from the launch step don't carry over.
@@ -152,11 +178,12 @@ jobs:
           # Load the whole namespace into the cache, then run every benchmark query until
           # a full pass is served entirely from cache.
           curl -sf -H "Authorization: Bearer $TURBOPUFFER_API_KEY" \
-            http://127.0.0.1:3001/v1/namespaces/search-benchmark-game/hint_cache_warm
+            "http://127.0.0.1:3001/v1/namespaces/$TURBOPUFFER_NAMESPACE/hint_cache_warm"
           python3 - <<'EOF'
           import json, os, sys, time, urllib.request
 
-          url = "http://127.0.0.1:3001/v2/namespaces/search-benchmark-game/query"
+          namespace = os.environ["TURBOPUFFER_NAMESPACE"]
+          url = f"http://127.0.0.1:3001/v2/namespaces/{namespace}/query"
           headers = {
               "Authorization": f"Bearer {os.environ['TURBOPUFFER_API_KEY']}",
               "Content-Type": "application/json",
@@ -185,7 +212,40 @@ jobs:
           EOF
 
       - name: Run benchmarks
-        run: make bench
+        run: make ${{ matrix.target }}
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: benchmark-results-${{ matrix.benchmark }}
+          path: ${{ matrix.results }}
+          if-no-files-found: error
+
+      - name: Upload turbopuffer logs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: tpuf-${{ matrix.benchmark }}.log
+          path: turbopuffer/tpuf.log
+
+  publish:
+    name: Publish report
+    needs: benchmark
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - name: Download benchmark results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: benchmark-results-*
+          merge-multiple: true
 
       - name: Publish results
         run: make publish
@@ -194,13 +254,6 @@ jobs:
           GIT_AUTHOR_EMAIL: bot@turbopuffer.com
           GIT_COMMITTER_NAME: turbobot
           GIT_COMMITTER_EMAIL: bot@turbopuffer.com
-
-      - name: Upload turbopuffer logs
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        if: always()
-        with:
-          name: tpuf.log
-          path: turbopuffer/tpuf.log
 
       - name: Upload GitHub Pages artifacts
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

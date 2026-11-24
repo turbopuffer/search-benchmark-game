@@ -3,6 +3,7 @@ import $ from 'jquery';
 import ReactDOM from 'react-dom';
 import './style.scss'
 import * as serviceWorker from './serviceWorker';
+import Throughput from './Throughput';
 
 function formatPercentVariation(p) {
   if (p !== undefined) {
@@ -244,6 +245,7 @@ class Benchmark extends React.Component {
           }
         </tbody>
       </table>
+      <Throughput />
     </div>;
   }
 

@@ -13,8 +13,11 @@ COMMANDS ?=  TOP_10 TOP_100 TOP_1000 COUNT TOP_100_FILTER_5% TOP_100_FILTER_20% 
 #ENGINES ?= tantivy-0.26 lucene-10.4.0
 ENGINES ?= turbopuffer tantivy-0.26 lucene-10.4.0
 PORT ?= 8080
+THROUGHPUT_ARGS ?=
 
 NOW = $(shell date +%Y-%m-%dT%H-%M-%S)
+
+.PHONY: throughput prepare-report
 
 help:
 	@grep '^[^#[:space:]].*:' Makefile
@@ -36,22 +39,29 @@ index:
 
 bench:
 	@echo "--- Benchmarking ---"
+	@rm -f throughput-results.json
 	@rm -fr results
 	@mkdir results
 	@python3 src/client.py queries.txt $(ENGINES)
+
+throughput:
+	@python3 src/throughput.py $(ENGINES) $(THROUGHPUT_ARGS)
 
 compile:
 	@echo "--- Compiling binaries ---"
 	@for engine in $(ENGINES); do cd ${shell pwd}/engines/$$engine && make compile ; done
 
-serve:
-	@echo "--- Serving results ---"
+prepare-report:
 	@cp results.json web/build/results.json
+	@rm -f web/build/throughput-results.json
+	@if [ -f throughput-results.json ]; then cp throughput-results.json web/build/; fi
+
+serve: prepare-report
+	@echo "--- Serving results ---"
 	@cd web/build && python3 -m http.server $(PORT)
 
-publish:
+publish: prepare-report
 	@echo "--- Publishing results ---"
-	@cp results.json web/build/results.json
 	@mkdir -p build
 	@cp -R web/build build/$(NOW)
 	@git fetch origin gh-pages
