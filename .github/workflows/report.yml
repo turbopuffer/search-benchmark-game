@@ -30,6 +30,9 @@ jobs:
 
     runs-on: blacksmith-32vcpu-ubuntu-2404
 
+    env:
+      TURBOPUFFER_NAMESPACE: search-benchmark-game-${{ matrix.benchmark }}
+
     steps:
       - name: Dump system information
         run: |
@@ -138,7 +141,7 @@ jobs:
           # to complete. Same environment as the server, so it sees the same data.
           # Only works with the test API key where the API key *is* the org ID.
           env 'TPUF_BLOB.SYSTEM_PREFIX=system/search-benchmark-game' ENV=benchmark HOSTNAME=`hostname` \
-            target/release/tpuf segments-full-merge $TURBOPUFFER_API_KEY search-benchmark-game
+            target/release/tpuf segments-full-merge "$TURBOPUFFER_API_KEY" "$TURBOPUFFER_NAMESPACE"
 
           # Restart the server with the binary built earlier: `cargo run` here would
           # rebuild, since RUSTFLAGS from the launch step don't carry over.
@@ -159,11 +162,12 @@ jobs:
           # Load the whole namespace into the cache, then run every benchmark query until
           # a full pass is served entirely from cache.
           curl -sf -H "Authorization: Bearer $TURBOPUFFER_API_KEY" \
-            http://127.0.0.1:3001/v1/namespaces/search-benchmark-game/hint_cache_warm
+            "http://127.0.0.1:3001/v1/namespaces/$TURBOPUFFER_NAMESPACE/hint_cache_warm"
           python3 - <<'EOF'
           import json, os, sys, time, urllib.request
 
-          url = "http://127.0.0.1:3001/v2/namespaces/search-benchmark-game/query"
+          namespace = os.environ["TURBOPUFFER_NAMESPACE"]
+          url = f"http://127.0.0.1:3001/v2/namespaces/{namespace}/query"
           headers = {
               "Authorization": f"Bearer {os.environ['TURBOPUFFER_API_KEY']}",
               "Content-Type": "application/json",
