@@ -1,0 +1,1966 @@
+{
+  "config": {
+    "engines": [
+      "turbopuffer",
+      "tantivy-0.26",
+      "lucene-10.4.0"
+    ],
+    "queries": "queries.txt",
+    "commands": [
+      "TOP_10",
+      "TOP_100",
+      "TOP_1000",
+      "COUNT"
+    ],
+    "concurrency": null,
+    "max_workers": 64,
+    "min_gain": 0.05,
+    "duration": 60,
+    "iterations": null,
+    "warmup": 60,
+    "repeats": 1,
+    "output": "throughput-results.json"
+  },
+  "results": [
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "concurrency": 1,
+      "median_qps": 309.45940286349816,
+      "runs": [
+        {
+          "completed": 18569,
+          "elapsed_seconds": 60.004639795,
+          "qps": 309.45940286349816,
+          "latency_us": {
+            "p50": 2709.5670002381667,
+            "p95": 8565.189999899303,
+            "p99": 10184.940000272036
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "concurrency": 2,
+      "median_qps": 603.5961691443547,
+      "runs": [
+        {
+          "completed": 36217,
+          "elapsed_seconds": 60.0020375400004,
+          "qps": 603.5961691443547,
+          "latency_us": {
+            "p50": 2796.8499998678453,
+            "p95": 8706.55499966233,
+            "p99": 10305.12599982103
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "concurrency": 4,
+      "median_qps": 1136.1967115356124,
+      "runs": [
+        {
+          "completed": 68174,
+          "elapsed_seconds": 60.00193391499988,
+          "qps": 1136.1967115356124,
+          "latency_us": {
+            "p50": 3027.172999736649,
+            "p95": 9052.63399999967,
+            "p99": 10763.22499966409
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "concurrency": 8,
+      "median_qps": 2007.685720250935,
+      "runs": [
+        {
+          "completed": 120469,
+          "elapsed_seconds": 60.003913353999906,
+          "qps": 2007.685720250935,
+          "latency_us": {
+            "p50": 3501.0620003959048,
+            "p95": 9838.550000040414,
+            "p99": 12147.464000008767
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "concurrency": 16,
+      "median_qps": 3232.3034548823266,
+      "runs": [
+        {
+          "completed": 193960,
+          "elapsed_seconds": 60.0067421599997,
+          "qps": 3232.3034548823266,
+          "latency_us": {
+            "p50": 4298.347999792895,
+            "p95": 12098.68199975972,
+            "p99": 15731.440999843471
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "concurrency": 32,
+      "median_qps": 4060.8637776114756,
+      "runs": [
+        {
+          "completed": 243713,
+          "elapsed_seconds": 60.01506412100025,
+          "qps": 4060.8637776114756,
+          "latency_us": {
+            "p50": 6763.054999737506,
+            "p95": 18507.522999698267,
+            "p99": 23481.408999941777
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "concurrency": 64,
+      "median_qps": 4313.963591937309,
+      "runs": [
+        {
+          "completed": 258925,
+          "elapsed_seconds": 60.02020983300008,
+          "qps": 4313.963591937309,
+          "latency_us": {
+            "p50": 12959.31799995742,
+            "p95": 31127.70300003831,
+            "p99": 42715.46499967371
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "concurrency": 48,
+      "median_qps": 4268.529067960787,
+      "runs": [
+        {
+          "completed": 256199,
+          "elapsed_seconds": 60.02044168400016,
+          "qps": 4268.529067960787,
+          "latency_us": {
+            "p50": 9761.093999713921,
+            "p95": 24601.213999631,
+            "p99": 32478.9929995859
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 1,
+      "median_qps": 65.36797792935894,
+      "runs": [
+        {
+          "completed": 3924,
+          "elapsed_seconds": 60.02939243799983,
+          "qps": 65.36797792935894,
+          "latency_us": {
+            "p50": 2384.2359996706364,
+            "p95": 94875.47000026098,
+            "p99": 212696.8869997654
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 2,
+      "median_qps": 128.53152724201948,
+      "runs": [
+        {
+          "completed": 7724,
+          "elapsed_seconds": 60.094205412000065,
+          "qps": 128.53152724201948,
+          "latency_us": {
+            "p50": 2442.314999825612,
+            "p95": 95955.52299970223,
+            "p99": 215561.16600004316
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 4,
+      "median_qps": 246.42260024465517,
+      "runs": [
+        {
+          "completed": 14835,
+          "elapsed_seconds": 60.20145873499996,
+          "qps": 246.42260024465517,
+          "latency_us": {
+            "p50": 2539.8990001122,
+            "p95": 98601.05799998564,
+            "p99": 224431.5299999471
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 8,
+      "median_qps": 454.2689430586232,
+      "runs": [
+        {
+          "completed": 27307,
+          "elapsed_seconds": 60.11196762899999,
+          "qps": 454.2689430586232,
+          "latency_us": {
+            "p50": 2776.812999854883,
+            "p95": 106807.33600020176,
+            "p99": 243994.44799973935
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 16,
+      "median_qps": 803.2878000807802,
+      "runs": [
+        {
+          "completed": 48371,
+          "elapsed_seconds": 60.21627615299985,
+          "qps": 803.2878000807802,
+          "latency_us": {
+            "p50": 3032.2630000227946,
+            "p95": 119592.65000041341,
+            "p99": 278629.00299987814
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 32,
+      "median_qps": 1084.2532356984602,
+      "runs": [
+        {
+          "completed": 65329,
+          "elapsed_seconds": 60.25252943600026,
+          "qps": 1084.2532356984602,
+          "latency_us": {
+            "p50": 4289.383000013913,
+            "p95": 174581.48900004744,
+            "p99": 404356.9010000283
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 64,
+      "median_qps": 1076.0828289042115,
+      "runs": [
+        {
+          "completed": 64948,
+          "elapsed_seconds": 60.35594868299995,
+          "qps": 1076.0828289042115,
+          "latency_us": {
+            "p50": 8270.899000308418,
+            "p95": 352103.97799983184,
+            "p99": 818707.3540002529
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 24,
+      "median_qps": 936.9387117706008,
+      "runs": [
+        {
+          "completed": 56440,
+          "elapsed_seconds": 60.238732044000244,
+          "qps": 936.9387117706008,
+          "latency_us": {
+            "p50": 3451.3099999458063,
+            "p95": 162682.0179999413,
+            "p99": 380484.7119999977
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "concurrency": 48,
+      "median_qps": 1079.4974397931019,
+      "runs": [
+        {
+          "completed": 65092,
+          "elapsed_seconds": 60.298429251000016,
+          "qps": 1079.4974397931019,
+          "latency_us": {
+            "p50": 6369.067999912659,
+            "p95": 196035.26600076293,
+            "p99": 798689.3319994124
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 1,
+      "median_qps": 380.2428338548321,
+      "runs": [
+        {
+          "completed": 22815,
+          "elapsed_seconds": 60.00113077399965,
+          "qps": 380.2428338548321,
+          "latency_us": {
+            "p50": 635.6329995469423,
+            "p95": 12150.350999945658,
+            "p99": 20847.114999924088
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 2,
+      "median_qps": 726.585954144801,
+      "runs": [
+        {
+          "completed": 43597,
+          "elapsed_seconds": 60.0025361779999,
+          "qps": 726.585954144801,
+          "latency_us": {
+            "p50": 814.9510003931937,
+            "p95": 13094.167999952333,
+            "p99": 21791.248999761592
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 4,
+      "median_qps": 1425.4898611728495,
+      "runs": [
+        {
+          "completed": 85546,
+          "elapsed_seconds": 60.01165096299974,
+          "qps": 1425.4898611728495,
+          "latency_us": {
+            "p50": 843.79399959289,
+            "p95": 13755.680000031134,
+            "p99": 21923.44699960813
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 8,
+      "median_qps": 2683.162493050795,
+      "runs": [
+        {
+          "completed": 161031,
+          "elapsed_seconds": 60.01537380500031,
+          "qps": 2683.162493050795,
+          "latency_us": {
+            "p50": 906.2019998964388,
+            "p95": 14851.337000436615,
+            "p99": 23139.670999626105
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 16,
+      "median_qps": 4905.741452116133,
+      "runs": [
+        {
+          "completed": 294496,
+          "elapsed_seconds": 60.03088480599945,
+          "qps": 4905.741452116133,
+          "latency_us": {
+            "p50": 971.4140005598892,
+            "p95": 15628.336999725434,
+            "p99": 24623.178000183543
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 32,
+      "median_qps": 6572.155250676014,
+      "runs": [
+        {
+          "completed": 394474,
+          "elapsed_seconds": 60.02201484199941,
+          "qps": 6572.155250676014,
+          "latency_us": {
+            "p50": 1699.8339997371659,
+            "p95": 20495.01799956488,
+            "p99": 35150.568000062776
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 64,
+      "median_qps": 5113.481617560237,
+      "runs": [
+        {
+          "completed": 307011,
+          "elapsed_seconds": 60.03952355000001,
+          "qps": 5113.481617560237,
+          "latency_us": {
+            "p50": 9614.159000193467,
+            "p95": 33799.10999956337,
+            "p99": 47974.287000215554
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 24,
+      "median_qps": 5911.670431676067,
+      "runs": [
+        {
+          "completed": 354895,
+          "elapsed_seconds": 60.03294738799923,
+          "qps": 5911.670431676067,
+          "latency_us": {
+            "p50": 1129.1410000922042,
+            "p95": 17908.980999891355,
+            "p99": 33247.81399987842
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "concurrency": 48,
+      "median_qps": 5352.2071721219245,
+      "runs": [
+        {
+          "completed": 321355,
+          "elapsed_seconds": 60.04158465199998,
+          "qps": 5352.2071721219245,
+          "latency_us": {
+            "p50": 7113.031000699266,
+            "p95": 24454.0550002057,
+            "p99": 36267.93700004782
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "concurrency": 1,
+      "median_qps": 249.30089161259932,
+      "runs": [
+        {
+          "completed": 14959,
+          "elapsed_seconds": 60.00379662999967,
+          "qps": 249.30089161259932,
+          "latency_us": {
+            "p50": 3255.635999266815,
+            "p95": 11652.889000288269,
+            "p99": 11935.148999327794
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "concurrency": 2,
+      "median_qps": 484.53487072934456,
+      "runs": [
+        {
+          "completed": 29074,
+          "elapsed_seconds": 60.003937294000025,
+          "qps": 484.53487072934456,
+          "latency_us": {
+            "p50": 3376.8129997042706,
+            "p95": 11693.955999362515,
+            "p99": 12215.737000587978
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "concurrency": 4,
+      "median_qps": 915.4894079096144,
+      "runs": [
+        {
+          "completed": 54930,
+          "elapsed_seconds": 60.00069419200008,
+          "qps": 915.4894079096144,
+          "latency_us": {
+            "p50": 3644.4760007725563,
+            "p95": 12141.908000558033,
+            "p99": 12673.33600026177
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "concurrency": 8,
+      "median_qps": 1627.5130893753706,
+      "runs": [
+        {
+          "completed": 97665,
+          "elapsed_seconds": 60.008733962000406,
+          "qps": 1627.5130893753706,
+          "latency_us": {
+            "p50": 4189.006000160589,
+            "p95": 13250.039000013203,
+            "p99": 14456.005000283767
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "concurrency": 16,
+      "median_qps": 2650.604703525357,
+      "runs": [
+        {
+          "completed": 159060,
+          "elapsed_seconds": 60.00894806700035,
+          "qps": 2650.604703525357,
+          "latency_us": {
+            "p50": 5225.040999903285,
+            "p95": 15522.468000199297,
+            "p99": 18924.867999885464
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "concurrency": 32,
+      "median_qps": 3342.1727181899328,
+      "runs": [
+        {
+          "completed": 200586,
+          "elapsed_seconds": 60.01664692800023,
+          "qps": 3342.1727181899328,
+          "latency_us": {
+            "p50": 8131.2379998053075,
+            "p95": 23361.98900047748,
+            "p99": 27482.626999699278
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "concurrency": 64,
+      "median_qps": 3541.8767777437142,
+      "runs": [
+        {
+          "completed": 212608,
+          "elapsed_seconds": 60.02693299099974,
+          "qps": 3541.8767777437142,
+          "latency_us": {
+            "p50": 15768.240000397782,
+            "p95": 37246.60199986829,
+            "p99": 52035.89499978989
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "concurrency": 48,
+      "median_qps": 3505.038593428785,
+      "runs": [
+        {
+          "completed": 210388,
+          "elapsed_seconds": 60.02444606300014,
+          "qps": 3505.038593428785,
+          "latency_us": {
+            "p50": 11828.883000816859,
+            "p95": 29691.835999983596,
+            "p99": 39249.74399978964
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 1,
+      "median_qps": 52.3056697273887,
+      "runs": [
+        {
+          "completed": 3139,
+          "elapsed_seconds": 60.01261462399998,
+          "qps": 52.3056697273887,
+          "latency_us": {
+            "p50": 2855.272000488185,
+            "p95": 136385.47800019296,
+            "p99": 242281.18199971505
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 2,
+      "median_qps": 103.1447487483965,
+      "runs": [
+        {
+          "completed": 6195,
+          "elapsed_seconds": 60.06122536699968,
+          "qps": 103.1447487483965,
+          "latency_us": {
+            "p50": 2975.8789996776613,
+            "p95": 137075.21299966174,
+            "p99": 246790.3179995119
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 4,
+      "median_qps": 196.1783738311212,
+      "runs": [
+        {
+          "completed": 11774,
+          "elapsed_seconds": 60.016809039999316,
+          "qps": 196.1783738311212,
+          "latency_us": {
+            "p50": 3117.905999715731,
+            "p95": 143625.54299987096,
+            "p99": 259301.22199952166
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 8,
+      "median_qps": 361.2568308117867,
+      "runs": [
+        {
+          "completed": 21763,
+          "elapsed_seconds": 60.2424595020002,
+          "qps": 361.2568308117867,
+          "latency_us": {
+            "p50": 3371.540999978606,
+            "p95": 155143.6219997413,
+            "p99": 281679.21300064336
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 16,
+      "median_qps": 636.5575640336115,
+      "runs": [
+        {
+          "completed": 38344,
+          "elapsed_seconds": 60.23650046199964,
+          "qps": 636.5575640336115,
+          "latency_us": {
+            "p50": 3752.6870000874624,
+            "p95": 173083.8509993191,
+            "p99": 321308.94100009755
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 32,
+      "median_qps": 854.3151248810555,
+      "runs": [
+        {
+          "completed": 51512,
+          "elapsed_seconds": 60.29625193299944,
+          "qps": 854.3151248810555,
+          "latency_us": {
+            "p50": 6398.866999916208,
+            "p95": 257181.95199988259,
+            "p99": 470530.442999916
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 64,
+      "median_qps": 846.7249570646779,
+      "runs": [
+        {
+          "completed": 51109,
+          "elapsed_seconds": 60.36080497400053,
+          "qps": 846.7249570646779,
+          "latency_us": {
+            "p50": 10834.185000021535,
+            "p95": 518246.2940001642,
+            "p99": 956984.6580006925
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 24,
+      "median_qps": 733.7432517456243,
+      "runs": [
+        {
+          "completed": 44206,
+          "elapsed_seconds": 60.247232114000326,
+          "qps": 733.7432517456243,
+          "latency_us": {
+            "p50": 4751.542999656522,
+            "p95": 243371.24899921037,
+            "p99": 446475.4210002866
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "concurrency": 48,
+      "median_qps": 850.4624633104579,
+      "runs": [
+        {
+          "completed": 51333,
+          "elapsed_seconds": 60.358924954999566,
+          "qps": 850.4624633104579,
+          "latency_us": {
+            "p50": 7772.334999572195,
+            "p95": 287703.5560004515,
+            "p99": 928312.1649996247
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 1,
+      "median_qps": 298.06176314998004,
+      "runs": [
+        {
+          "completed": 17885,
+          "elapsed_seconds": 60.00434209000014,
+          "qps": 298.06176314998004,
+          "latency_us": {
+            "p50": 1324.877999650198,
+            "p95": 16067.692000433453,
+            "p99": 24257.271000351466
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 2,
+      "median_qps": 561.7712320038809,
+      "runs": [
+        {
+          "completed": 33707,
+          "elapsed_seconds": 60.001292482999816,
+          "qps": 561.7712320038809,
+          "latency_us": {
+            "p50": 1380.161999804841,
+            "p95": 17586.573999324173,
+            "p99": 25865.700999929686
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 4,
+      "median_qps": 1072.8660915843786,
+      "runs": [
+        {
+          "completed": 64374,
+          "elapsed_seconds": 60.001896327000395,
+          "qps": 1072.8660915843786,
+          "latency_us": {
+            "p50": 1486.4209997540456,
+            "p95": 18216.6579998011,
+            "p99": 26953.583999784314
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 8,
+      "median_qps": 2011.5864809020693,
+      "runs": [
+        {
+          "completed": 120729,
+          "elapsed_seconds": 60.01680819899957,
+          "qps": 2011.5864809020693,
+          "latency_us": {
+            "p50": 1590.3069997875718,
+            "p95": 19231.20299943548,
+            "p99": 28479.238999352674
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 16,
+      "median_qps": 3638.8762355845147,
+      "runs": [
+        {
+          "completed": 218428,
+          "elapsed_seconds": 60.0262239929998,
+          "qps": 3638.8762355845147,
+          "latency_us": {
+            "p50": 1702.6980003720382,
+            "p95": 20711.97400073288,
+            "p99": 30743.502000404987
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 32,
+      "median_qps": 4872.292409109863,
+      "runs": [
+        {
+          "completed": 292509,
+          "elapsed_seconds": 60.035189893998904,
+          "qps": 4872.292409109863,
+          "latency_us": {
+            "p50": 2732.721000938909,
+            "p95": 28956.124999240274,
+            "p99": 45238.7710010953
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 64,
+      "median_qps": 4202.95336019402,
+      "runs": [
+        {
+          "completed": 252396,
+          "elapsed_seconds": 60.05205824800032,
+          "qps": 4202.95336019402,
+          "latency_us": {
+            "p50": 11859.770998853492,
+            "p95": 41182.9549993854,
+            "p99": 57801.93299870007
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 24,
+      "median_qps": 4299.784406732963,
+      "runs": [
+        {
+          "completed": 258170,
+          "elapsed_seconds": 60.04254529500031,
+          "qps": 4299.784406732963,
+          "latency_us": {
+            "p50": 2165.9869998984504,
+            "p95": 25374.019000082626,
+            "p99": 42548.3399994846
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "concurrency": 48,
+      "median_qps": 4040.5164046774958,
+      "runs": [
+        {
+          "completed": 242598,
+          "elapsed_seconds": 60.041335240999615,
+          "qps": 4040.5164046774958,
+          "latency_us": {
+            "p50": 8405.103000768577,
+            "p95": 35104.941998724826,
+            "p99": 51932.981001300504
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "concurrency": 1,
+      "median_qps": 142.06582706473347,
+      "runs": [
+        {
+          "completed": 8524,
+          "elapsed_seconds": 60.00035459699939,
+          "qps": 142.06582706473347,
+          "latency_us": {
+            "p50": 5746.480999732739,
+            "p95": 16417.45999950217,
+            "p99": 18725.13399939635
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "concurrency": 2,
+      "median_qps": 274.7035098427852,
+      "runs": [
+        {
+          "completed": 16483,
+          "elapsed_seconds": 60.00287367800047,
+          "qps": 274.7035098427852,
+          "latency_us": {
+            "p50": 6030.484999428154,
+            "p95": 16985.256001134985,
+            "p99": 19232.69599865307
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "concurrency": 4,
+      "median_qps": 522.9583770180975,
+      "runs": [
+        {
+          "completed": 31378,
+          "elapsed_seconds": 60.00095108700043,
+          "qps": 522.9583770180975,
+          "latency_us": {
+            "p50": 6370.33299972245,
+            "p95": 17410.31299934548,
+            "p99": 19766.539000556804
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "concurrency": 8,
+      "median_qps": 935.8104448959168,
+      "runs": [
+        {
+          "completed": 56159,
+          "elapsed_seconds": 60.01108483700045,
+          "qps": 935.8104448959168,
+          "latency_us": {
+            "p50": 7093.210000675754,
+            "p95": 19220.653999582282,
+            "p99": 21753.610999439843
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "concurrency": 16,
+      "median_qps": 1546.220283892523,
+      "runs": [
+        {
+          "completed": 92786,
+          "elapsed_seconds": 60.00826723499995,
+          "qps": 1546.220283892523,
+          "latency_us": {
+            "p50": 8553.201998438453,
+            "p95": 23392.226999931154,
+            "p99": 27234.622000833042
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "concurrency": 32,
+      "median_qps": 2011.482153665612,
+      "runs": [
+        {
+          "completed": 120735,
+          "elapsed_seconds": 60.022903896999196,
+          "qps": 2011.482153665612,
+          "latency_us": {
+            "p50": 13459.976000376628,
+            "p95": 34937.33700088342,
+            "p99": 41076.104000239866
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "concurrency": 64,
+      "median_qps": 2085.977015131547,
+      "runs": [
+        {
+          "completed": 125227,
+          "elapsed_seconds": 60.03278036699885,
+          "qps": 2085.977015131547,
+          "latency_us": {
+            "p50": 27042.792000429472,
+            "p95": 59921.66400028509,
+            "p99": 81536.5729995392
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "concurrency": 48,
+      "median_qps": 2080.5508826891296,
+      "runs": [
+        {
+          "completed": 124902,
+          "elapsed_seconds": 60.03313883800001,
+          "qps": 2080.5508826891296,
+          "latency_us": {
+            "p50": 20109.652999963146,
+            "p95": 46300.64699995273,
+            "p99": 61680.846998569905
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 1,
+      "median_qps": 40.206375389213335,
+      "runs": [
+        {
+          "completed": 2413,
+          "elapsed_seconds": 60.01535768000031,
+          "qps": 40.206375389213335,
+          "latency_us": {
+            "p50": 5054.811999798403,
+            "p95": 195003.8979994133,
+            "p99": 282730.81699990144
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 2,
+      "median_qps": 78.30559643176088,
+      "runs": [
+        {
+          "completed": 4701,
+          "elapsed_seconds": 60.03402329100027,
+          "qps": 78.30559643176088,
+          "latency_us": {
+            "p50": 5213.109001488192,
+            "p95": 199450.51900140243,
+            "p99": 287758.1669999927
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 4,
+      "median_qps": 149.55708521335998,
+      "runs": [
+        {
+          "completed": 8996,
+          "elapsed_seconds": 60.15094495300036,
+          "qps": 149.55708521335998,
+          "latency_us": {
+            "p50": 5439.584998384817,
+            "p95": 205709.9339999695,
+            "p99": 300145.2589996916
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 8,
+      "median_qps": 272.1214851903673,
+      "runs": [
+        {
+          "completed": 16393,
+          "elapsed_seconds": 60.24147629700019,
+          "qps": 272.1214851903673,
+          "latency_us": {
+            "p50": 5972.555998596363,
+            "p95": 226634.53699897218,
+            "p99": 329884.25500116136
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 16,
+      "median_qps": 481.6805858493573,
+      "runs": [
+        {
+          "completed": 29061,
+          "elapsed_seconds": 60.332512569000755,
+          "qps": 481.6805858493573,
+          "latency_us": {
+            "p50": 6582.381000043824,
+            "p95": 251248.2980000641,
+            "p99": 377443.21299942385
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 32,
+      "median_qps": 642.6406388563954,
+      "runs": [
+        {
+          "completed": 38795,
+          "elapsed_seconds": 60.36810879099903,
+          "qps": 642.6406388563954,
+          "latency_us": {
+            "p50": 10608.180000417633,
+            "p95": 377588.48299927195,
+            "p99": 555640.1760004519
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 64,
+      "median_qps": 637.2088356457309,
+      "runs": [
+        {
+          "completed": 38549,
+          "elapsed_seconds": 60.49665014600032,
+          "qps": 637.2088356457309,
+          "latency_us": {
+            "p50": 21192.173999224906,
+            "p95": 759585.1629994286,
+            "p99": 1133482.774001095
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 24,
+      "median_qps": 560.0150626522943,
+      "runs": [
+        {
+          "completed": 33769,
+          "elapsed_seconds": 60.30016378499931,
+          "qps": 560.0150626522943,
+          "latency_us": {
+            "p50": 9018.824999657227,
+            "p95": 348414.6299997519,
+            "p99": 522605.594000197
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "concurrency": 48,
+      "median_qps": 641.402038369561,
+      "runs": [
+        {
+          "completed": 38712,
+          "elapsed_seconds": 60.355280595000295,
+          "qps": 641.402038369561,
+          "latency_us": {
+            "p50": 14705.083000080776,
+            "p95": 417596.9499992789,
+            "p99": 1090650.823998658
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 1,
+      "median_qps": 187.79213890839213,
+      "runs": [
+        {
+          "completed": 11268,
+          "elapsed_seconds": 60.002511635999326,
+          "qps": 187.79213890839213,
+          "latency_us": {
+            "p50": 2607.1460015373304,
+            "p95": 23138.75899926643,
+            "p99": 32075.00999997137
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 2,
+      "median_qps": 369.8463439472158,
+      "runs": [
+        {
+          "completed": 22195,
+          "elapsed_seconds": 60.011408422000386,
+          "qps": 369.8463439472158,
+          "latency_us": {
+            "p50": 2869.41900048987,
+            "p95": 24232.524001490674,
+            "p99": 32304.181000654353
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 4,
+      "median_qps": 725.1714762599886,
+      "runs": [
+        {
+          "completed": 43511,
+          "elapsed_seconds": 60.00098104300014,
+          "qps": 725.1714762599886,
+          "latency_us": {
+            "p50": 2892.260999942664,
+            "p95": 24228.58600039035,
+            "p99": 32746.259999839822
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 8,
+      "median_qps": 1340.938847001072,
+      "runs": [
+        {
+          "completed": 80467,
+          "elapsed_seconds": 60.007956499999636,
+          "qps": 1340.938847001072,
+          "latency_us": {
+            "p50": 2993.4920003142906,
+            "p95": 25872.934000290115,
+            "p99": 35236.476998761646
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 16,
+      "median_qps": 2379.988811465491,
+      "runs": [
+        {
+          "completed": 142889,
+          "elapsed_seconds": 60.03767719900134,
+          "qps": 2379.988811465491,
+          "latency_us": {
+            "p50": 3415.133000089554,
+            "p95": 28291.91599994374,
+            "p99": 39589.27100029541
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 32,
+      "median_qps": 3067.741560056951,
+      "runs": [
+        {
+          "completed": 184220,
+          "elapsed_seconds": 60.05069084000024,
+          "qps": 3067.741560056951,
+          "latency_us": {
+            "p50": 5254.977000731742,
+            "p95": 43104.24100003729,
+            "p99": 60281.645999566535
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 64,
+      "median_qps": 2897.4415161285374,
+      "runs": [
+        {
+          "completed": 174085,
+          "elapsed_seconds": 60.08231711700137,
+          "qps": 2897.4415161285374,
+          "latency_us": {
+            "p50": 14928.271999451681,
+            "p95": 66460.39800034487,
+            "p99": 120253.94199918082
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 24,
+      "median_qps": 2715.6044878906864,
+      "runs": [
+        {
+          "completed": 163015,
+          "elapsed_seconds": 60.028991970999414,
+          "qps": 2715.6044878906864,
+          "latency_us": {
+            "p50": 4392.628999994486,
+            "p95": 39359.157999570016,
+            "p99": 56946.4739983232
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "concurrency": 48,
+      "median_qps": 2978.147635121876,
+      "runs": [
+        {
+          "completed": 178886,
+          "elapsed_seconds": 60.066196145000504,
+          "qps": 2978.147635121876,
+          "latency_us": {
+            "p50": 8731.25599900959,
+            "p95": 56839.06299964292,
+            "p99": 119666.27099900506
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "concurrency": 1,
+      "median_qps": 195.74349335767175,
+      "runs": [
+        {
+          "completed": 11749,
+          "elapsed_seconds": 60.022429345999626,
+          "qps": 195.74349335767175,
+          "latency_us": {
+            "p50": 3154.0429990855046,
+            "p95": 23202.40000153717,
+            "p99": 24985.387999549857
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "concurrency": 2,
+      "median_qps": 359.9296518750291,
+      "runs": [
+        {
+          "completed": 21597,
+          "elapsed_seconds": 60.003392017000806,
+          "qps": 359.9296518750291,
+          "latency_us": {
+            "p50": 3342.4469984311145,
+            "p95": 24940.603998402366,
+            "p99": 27442.332000646275
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "concurrency": 4,
+      "median_qps": 685.9656090806021,
+      "runs": [
+        {
+          "completed": 41162,
+          "elapsed_seconds": 60.00592370099912,
+          "qps": 685.9656090806021,
+          "latency_us": {
+            "p50": 3584.5020011038287,
+            "p95": 25437.156000407413,
+            "p99": 27816.433999760193
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "concurrency": 8,
+      "median_qps": 1246.3251999691863,
+      "runs": [
+        {
+          "completed": 74783,
+          "elapsed_seconds": 60.00279862900061,
+          "qps": 1246.3251999691863,
+          "latency_us": {
+            "p50": 4078.8000005704816,
+            "p95": 26725.656000053277,
+            "p99": 29354.30199977418
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "concurrency": 16,
+      "median_qps": 2078.903811376237,
+      "runs": [
+        {
+          "completed": 124751,
+          "elapsed_seconds": 60.008067385000686,
+          "qps": 2078.903811376237,
+          "latency_us": {
+            "p50": 5164.107000382501,
+            "p95": 29704.93000066199,
+            "p99": 33288.848999291076
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "concurrency": 32,
+      "median_qps": 2665.9119832677475,
+      "runs": [
+        {
+          "completed": 160042,
+          "elapsed_seconds": 60.0327396419998,
+          "qps": 2665.9119832677475,
+          "latency_us": {
+            "p50": 8285.938998596976,
+            "p95": 45195.267999588395,
+            "p99": 53241.60700001812
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "concurrency": 64,
+      "median_qps": 2786.105452618279,
+      "runs": [
+        {
+          "completed": 167276,
+          "elapsed_seconds": 60.03936421099934,
+          "qps": 2786.105452618279,
+          "latency_us": {
+            "p50": 18075.873000270803,
+            "p95": 63673.47500054166,
+            "p99": 92861.60600095172
+          }
+        }
+      ]
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "concurrency": 48,
+      "median_qps": 2750.691389628835,
+      "runs": [
+        {
+          "completed": 165135,
+          "elapsed_seconds": 60.03399749700111,
+          "qps": 2750.691389628835,
+          "latency_us": {
+            "p50": 13190.460000259918,
+            "p95": 54855.46800082375,
+            "p99": 71347.32600025018
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "concurrency": 1,
+      "median_qps": 155.44872950198678,
+      "runs": [
+        {
+          "completed": 9327,
+          "elapsed_seconds": 60.00049038600082,
+          "qps": 155.44872950198678,
+          "latency_us": {
+            "p50": 1749.1939997853478,
+            "p95": 37863.10000032245,
+            "p99": 42764.473999341135
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "concurrency": 2,
+      "median_qps": 304.47317644308947,
+      "runs": [
+        {
+          "completed": 18269,
+          "elapsed_seconds": 60.002001533999646,
+          "qps": 304.47317644308947,
+          "latency_us": {
+            "p50": 1786.095001079957,
+            "p95": 38302.61400071322,
+            "p99": 43335.755999578396
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "concurrency": 4,
+      "median_qps": 584.3541101832424,
+      "runs": [
+        {
+          "completed": 35071,
+          "elapsed_seconds": 60.016690888000085,
+          "qps": 584.3541101832424,
+          "latency_us": {
+            "p50": 1865.521999206976,
+            "p95": 40205.137000157265,
+            "p99": 45513.60599907639
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "concurrency": 8,
+      "median_qps": 1089.9682695124172,
+      "runs": [
+        {
+          "completed": 65422,
+          "elapsed_seconds": 60.0219307569987,
+          "qps": 1089.9682695124172,
+          "latency_us": {
+            "p50": 2011.1169997107936,
+            "p95": 42710.06000089983,
+            "p99": 48827.50799879432
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "concurrency": 16,
+      "median_qps": 1921.2268598364071,
+      "runs": [
+        {
+          "completed": 115372,
+          "elapsed_seconds": 60.05121124000107,
+          "qps": 1921.2268598364071,
+          "latency_us": {
+            "p50": 2268.9509987685597,
+            "p95": 47004.76600010006,
+            "p99": 54765.71899998817
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "concurrency": 32,
+      "median_qps": 2412.1214926970533,
+      "runs": [
+        {
+          "completed": 144855,
+          "elapsed_seconds": 60.05294527600017,
+          "qps": 2412.1214926970533,
+          "latency_us": {
+            "p50": 3612.784001234104,
+            "p95": 79121.76399986492,
+            "p99": 91409.72900058841
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "concurrency": 64,
+      "median_qps": 2451.389922327872,
+      "runs": [
+        {
+          "completed": 147272,
+          "elapsed_seconds": 60.076937845999055,
+          "qps": 2451.389922327872,
+          "latency_us": {
+            "p50": 7728.2729998842115,
+            "p95": 144933.88700066134,
+            "p99": 185593.66699992097
+          }
+        }
+      ]
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "concurrency": 48,
+      "median_qps": 2431.8980338966844,
+      "runs": [
+        {
+          "completed": 146054,
+          "elapsed_seconds": 60.057616710999355,
+          "qps": 2431.8980338966844,
+          "latency_us": {
+            "p50": 5804.739999803132,
+            "p95": 89874.07499989786,
+            "p99": 172848.54399986216
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 1,
+      "median_qps": 554.8094468203807,
+      "runs": [
+        {
+          "completed": 33289,
+          "elapsed_seconds": 60.000780791999205,
+          "qps": 554.8094468203807,
+          "latency_us": {
+            "p50": 964.2710010666633,
+            "p95": 11070.738999478635,
+            "p99": 11527.73600006185
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 2,
+      "median_qps": 1075.7363245585454,
+      "runs": [
+        {
+          "completed": 64545,
+          "elapsed_seconds": 60.00076275799984,
+          "qps": 1075.7363245585454,
+          "latency_us": {
+            "p50": 1012.9319998668507,
+            "p95": 11388.635999537655,
+            "p99": 11927.347000892041
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 4,
+      "median_qps": 2088.0326175999157,
+      "runs": [
+        {
+          "completed": 125299,
+          "elapsed_seconds": 60.00816220199886,
+          "qps": 2088.0326175999157,
+          "latency_us": {
+            "p50": 1065.3609988366952,
+            "p95": 11516.485999891302,
+            "p99": 12080.073000106495
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 8,
+      "median_qps": 3900.4386943849945,
+      "runs": [
+        {
+          "completed": 234075,
+          "elapsed_seconds": 60.01248022099935,
+          "qps": 3900.4386943849945,
+          "latency_us": {
+            "p50": 1142.4749991419958,
+            "p95": 12212.122001074022,
+            "p99": 12879.814999905648
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 16,
+      "median_qps": 6915.868494291404,
+      "runs": [
+        {
+          "completed": 415059,
+          "elapsed_seconds": 60.01545580899983,
+          "qps": 6915.868494291404,
+          "latency_us": {
+            "p50": 1274.4430005113827,
+            "p95": 13145.914999768138,
+            "p99": 14676.279000923387
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 32,
+      "median_qps": 8240.608928681862,
+      "runs": [
+        {
+          "completed": 494635,
+          "elapsed_seconds": 60.02408369099976,
+          "qps": 8240.608928681862,
+          "latency_us": {
+            "p50": 2172.5999995396705,
+            "p95": 19107.269999949494,
+            "p99": 21791.760000269278
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 64,
+      "median_qps": 6924.214242675383,
+      "runs": [
+        {
+          "completed": 415622,
+          "elapsed_seconds": 60.024428105998595,
+          "qps": 6924.214242675383,
+          "latency_us": {
+            "p50": 7254.172000102699,
+            "p95": 24038.980998739135,
+            "p99": 33298.04700115346
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 24,
+      "median_qps": 7857.214523916745,
+      "runs": [
+        {
+          "completed": 471566,
+          "elapsed_seconds": 60.016943480999544,
+          "qps": 7857.214523916745,
+          "latency_us": {
+            "p50": 1698.2189990812913,
+            "p95": 15484.427000046708,
+            "p99": 20725.74799967697
+          }
+        }
+      ]
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "concurrency": 48,
+      "median_qps": 6800.811281744241,
+      "runs": [
+        {
+          "completed": 408258,
+          "elapsed_seconds": 60.03077913599918,
+          "qps": 6800.811281744241,
+          "latency_us": {
+            "p50": 5324.8700005497085,
+            "p95": 19880.510999428225,
+            "p99": 25692.154998978367
+          }
+        }
+      ]
+    }
+  ],
+  "sweeps": [
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_10",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 64,
+      "best_median_qps": 4313.963591937309
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_10",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 32,
+      "best_median_qps": 1084.2532356984602
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_10",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 32,
+      "best_median_qps": 6572.155250676014
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_100",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 64,
+      "best_median_qps": 3541.8767777437142
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_100",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 32,
+      "best_median_qps": 854.3151248810555
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_100",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 32,
+      "best_median_qps": 4872.292409109863
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "TOP_1000",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 64,
+      "best_median_qps": 2085.977015131547
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "TOP_1000",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 32,
+      "best_median_qps": 642.6406388563954
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "TOP_1000",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 32,
+      "best_median_qps": 3067.741560056951
+    },
+    {
+      "engine": "turbopuffer",
+      "command": "COUNT",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 64,
+      "best_median_qps": 2786.105452618279
+    },
+    {
+      "engine": "tantivy-0.26",
+      "command": "COUNT",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 64,
+      "best_median_qps": 2451.389922327872
+    },
+    {
+      "engine": "lucene-10.4.0",
+      "command": "COUNT",
+      "stop_reason": "worker_cap",
+      "best_concurrency": 32,
+      "best_median_qps": 8240.608928681862
+    }
+  ]
+}
